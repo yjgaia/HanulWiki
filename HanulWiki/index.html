@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+		<meta name="fragment" content="!">
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge, chrome=1">
+		<link href="/favicon.ico" rel="shortcut icon">
+		<title>Wiki</title>
+		<link rel="stylesheet" type="text/css" href="/__CSS">
+		<link rel="stylesheet" type="text/css" href="/R/github-markdown.css">
+		<link rel="stylesheet" type="text/css" href="/R/github-highlight.css">
+		<style>
+			html, body {
+				background-color : #fff;
+				color : #000;
+			}
+		</style>
+	</head>
+	<body>
+		<script src="/__SCRIPT"></script>
+		<script src="/R/ace.js"></script>
+		<script src="/R/highlight.js"></script>
+		<script>
+			// Synchronous highlighting with highlight.js
+			marked.setOptions({
+				highlight : function (code) {
+					return hljs.highlightAuto(code).value;
+				}
+			});
+		</script>
+	</body>
+</html>
