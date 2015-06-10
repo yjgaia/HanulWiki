@@ -73,8 +73,12 @@ HanulWiki.Form = CLASS({
 							},
 							errorMsgs : {
 								id : {
+									notEmpty : '이름을 입력해주세요.',
 									size : function(validParams) {
 										return '이름은 ' + validParams.max + '글자 미만으로 입력해주세요.';
+									},
+									exists : function() {
+										return '이미 존재하는 문서입니다.';
 									}
 								},
 								content : {
@@ -114,7 +118,10 @@ HanulWiki.Form = CLASS({
 								}
 							}), UUI.FULL_SUBMIT({
 								style : {
-									marginTop : 10
+									marginTop : 10,
+									backgroundColor : '#4183C4',
+									color : '#fff',
+									fontWeight : 'bold'
 								},
 								value : articleData === undefined ? '글 작성' : '글 수정'
 							}), UUI.FULL_UPLOAD_FORM({

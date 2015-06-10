@@ -7,11 +7,15 @@ HanulWiki.AuthRoom = OBJECT({
 			
 			on('auth', function(password, ret) {
 				
-				if (password === NODE_CONFIG.HanulWiki.password) {
+				var
+				// is authed
+				isAuthed = (CONFIG.HanulWiki !== undefined && CONFIG.HanulWiki.isPublic === true) || (NODE_CONFIG.HanulWiki !== undefined && password === NODE_CONFIG.HanulWiki.password);
+				
+				if (isAuthed === true) {
 					clientInfo.roles = ['ADMIN'];
 				}
 				
-				ret(password === NODE_CONFIG.HanulWiki.password);
+				ret(isAuthed);
 			});
 		});
 	}

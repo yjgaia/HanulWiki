@@ -21,24 +21,41 @@ HanulWiki.Home = CLASS({
 			style : {
 				padding : 10
 			},
-			c : [P({
+			c : [CONFIG.description === undefined ? '' : P({
+				style : {
+					marginBottom : 20
+				},
 				c : CONFIG.description
 			}), DIV({
-				style : {
-					marginTop : 20
-				},
 				c : [recentList = DIV({
 					style : {
-						flt : 'left'
+						flt : 'left',
+						border : '1px solid #ccc'
 					},
 					c : H2({
+						style : {
+							backgroundColor : '#4183C4',
+							color : '#fff',
+							fontWeight : 'bold',
+							padding : 5,
+							textAlign : 'center'
+						},
 						c : '최신글'
 					})
 				}), popularList = DIV({
 					style : {
-						flt : 'left'
+						marginLeft : 10,
+						flt : 'left',
+						border : '1px solid #ccc'
 					},
 					c : H2({
+						style : {
+							backgroundColor : '#4183C4',
+							color : '#fff',
+							fontWeight : 'bold',
+							padding : 5,
+							textAlign : 'center'
+						},
 						c : '인기글'
 					})
 				}), CLEAR_BOTH()]
@@ -48,7 +65,7 @@ HanulWiki.Home = CLASS({
 		TITLE(CONFIG.title);
 		
 		HanulWiki.ArticleModel.find({
-			count : 10
+			count : 20
 		}, EACH(function(articleData) {
 			
 			var
@@ -92,7 +109,7 @@ HanulWiki.Home = CLASS({
 		}));
 		
 		HanulWiki.ArticleModel.find({
-			count : 10,
+			count : 20,
 			sort : {
 				viewCount : -1
 			}

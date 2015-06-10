@@ -42,7 +42,13 @@ HanulWiki.Layout = CLASS(function(cls) {
 			
 			// layout
 			layout = DIV({
-				c : [menu = DIV(), content = DIV()]
+				c : [menu = DIV({
+					style : {
+						backgroundColor : '#4183C4',
+						color : '#fff',
+						fontWeight : 'bold'
+					}
+				}), content = DIV()]
 			}).appendTo(BODY);
 			
 			authRoom.send({
@@ -53,6 +59,20 @@ HanulWiki.Layout = CLASS(function(cls) {
 				isAuthed = _isAuthed;
 				
 				if (inner.checkIsClosed() !== true) {
+					
+					menu.append(H1({
+						style : {
+							flt : 'left',
+							padding : 10,
+							cursor : 'pointer'
+						},
+						c : CONFIG.title,
+						on : {
+							tap : function() {
+								HanulWiki.GO('');
+							}
+						}
+					}));
 				
 					menu.append(UUI.BUTTON_H({
 						style : {

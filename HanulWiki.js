@@ -8,6 +8,7 @@ BOOT({
 		webServerPort : 8406,
 		maxThumbHeight : 400,
 		HanulWiki : {
+			isPublic : true
 			//isPrivate : true
 		}
 	},

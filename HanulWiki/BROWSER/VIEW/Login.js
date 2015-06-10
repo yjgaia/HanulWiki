@@ -37,7 +37,10 @@ HanulWiki.Login = CLASS({
 					name : 'isRememberMe'
 				}), UUI.FULL_SUBMIT({
 					style : {
-						marginTop : 10
+						marginTop : 10,
+						backgroundColor : '#4183C4',
+						color : '#fff',
+						fontWeight : 'bold'
 					},
 					value : '로그인'
 				})],

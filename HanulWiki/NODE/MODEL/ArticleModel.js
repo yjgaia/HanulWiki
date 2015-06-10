@@ -1,3 +1,4 @@
+
 OVERRIDE(HanulWiki.ArticleModel, function(origin) {
 	'use strict';
 
@@ -50,7 +51,7 @@ OVERRIDE(HanulWiki.ArticleModel, function(origin) {
 
 			inner.on('create', {
 			
-				before : function(data, next) {
+				before : function(data, next, ret) {
 					
 					var
 					// cleaned content
@@ -79,8 +80,21 @@ OVERRIDE(HanulWiki.ArticleModel, function(origin) {
 						uri : '__TAG_INPUT',
 						paramStr : 'tag=' + encodeURIComponent(data.id)
 					}, function(tag) {
+						
 						data.id = tag;
-						next();
+						
+						self.get(data.id, {
+							notExists : next,
+							success : function() {
+								ret({
+									validErrors : {
+										id : {
+											type : 'exists'
+										}
+									}
+								});
+							}
+						});
 					});
 					
 					return false;
