@@ -11,11 +11,7 @@ HanulWiki.View = CLASS({
 		
 		var
 		// wrapper
-		wrapper = DIV({
-			style : {
-				padding : 10
-			}
-		}).appendTo(HanulWiki.Layout.getContent());
+		wrapper = DIV().appendTo(HanulWiki.Layout.getContent());
 		
 		inner.on('paramsChange', function(params) {
 			
@@ -59,7 +55,7 @@ HanulWiki.View = CLASS({
 					
 					wrapper.append(UUI.PANEL({
 						style : {
-							margin : '10px 0'
+							marginTop : 10
 						},
 						contentStyle : {
 							border : '1px solid #ccc'

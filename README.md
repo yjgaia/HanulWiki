@@ -50,3 +50,6 @@ BOOT({
 	}
 });
 ```
+
+## 라이센스 지정
+https://creativecommons.org/licenses/

@@ -18,9 +18,6 @@ HanulWiki.Login = CLASS({
 		
 		// wrapper
 		wrapper = DIV({
-			style : {
-				padding : 10
-			},
 			c : UUI.VALID_FORM({
 				c : [UUI.FULL_INPUT({
 					style : {

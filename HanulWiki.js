@@ -8,8 +8,9 @@ BOOT({
 		webServerPort : 8406,
 		maxThumbHeight : 400,
 		HanulWiki : {
-			isPublic : true
+			isPublic : true,
 			//isPrivate : true
+			license : 'CC BY-NC-SA'
 		}
 	},
 	NODE_CONFIG : {

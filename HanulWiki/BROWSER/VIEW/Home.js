@@ -18,9 +18,6 @@ HanulWiki.Home = CLASS({
 		
 		// wrapper
 		wrapper = DIV({
-			style : {
-				padding : 10
-			},
 			c : [CONFIG.description === undefined ? '' : P({
 				style : {
 					marginBottom : 20

@@ -2,6 +2,11 @@ HanulWiki.Layout = CLASS(function(cls) {
 	'use strict';
 
 	var
+	// license style
+	licenseStyle = {
+		fontSize : 12
+	},
+	
 	// is authed
 	isAuthed = false,
 	
@@ -40,16 +45,130 @@ HanulWiki.Layout = CLASS(function(cls) {
 			// menu
 			menu,
 			
+			// footer
+			footer,
+			
 			// layout
 			layout = DIV({
+				style : {
+					backgroundColor : '#fff',
+					color : '#000'
+				},
 				c : [menu = DIV({
 					style : {
 						backgroundColor : '#4183C4',
 						color : '#fff',
 						fontWeight : 'bold'
 					}
-				}), content = DIV()]
+				}),
+				
+				content = DIV({
+					style : {
+						padding : 10
+					}
+				}),
+				
+				footer = DIV({
+					style : {
+						borderTop : '1px solid #ccc',
+						backgroundColor : '#eee',
+						padding : 10
+					}
+				})]
 			}).appendTo(BODY);
+			
+			if (CONFIG.HanulWiki !== undefined) {
+				
+				if (CONFIG.HanulWiki.license === 'CC BY') {
+					footer.append(DIV({
+						style : licenseStyle,
+						c : [A({
+							href : 'http://creativecommons.org/licenses/by/4.0/',
+							c : IMG({
+								src : 'https://i.creativecommons.org/l/by/4.0/88x31.png'
+							})
+						}), BR(), '이 저작물은 ', A({
+							href : 'http://creativecommons.org/licenses/by/4.0/',
+							c : '크리에이티브 커먼즈 저작자표시 4.0 국제 라이선스'
+						}), '에 따라 이용할 수 있습니다.']
+					}));
+				}
+				
+				else if (CONFIG.HanulWiki.license === 'CC BY-SA') {
+					footer.append(DIV({
+						style : licenseStyle,
+						c : [A({
+							href : 'http://creativecommons.org/licenses/by-sa/4.0/',
+							c : IMG({
+								src : 'https://i.creativecommons.org/l/by-sa/4.0/88x31.png'
+							})
+						}), BR(), '이 저작물은 ', A({
+							href : 'http://creativecommons.org/licenses/by-sa/4.0/',
+							c : '크리에이티브 커먼즈 저작자표시-동일조건변경허락 4.0 국제 라이선스'
+						}), '에 따라 이용할 수 있습니다.']
+					}));
+				}
+				
+				else if (CONFIG.HanulWiki.license === 'CC BY-ND') {
+					footer.append(DIV({
+						style : licenseStyle,
+						c : [A({
+							href : 'http://creativecommons.org/licenses/by-nd/4.0/',
+							c : IMG({
+								src : 'https://i.creativecommons.org/l/by-nd/4.0/88x31.png'
+							})
+						}), BR(), '이 저작물은 ', A({
+							href : 'http://creativecommons.org/licenses/by-nd/4.0/',
+							c : '크리에이티브 커먼즈 저작자표시-변경금지 4.0 국제 라이선스'
+						}), '에 따라 이용할 수 있습니다.']
+					}));
+				}
+				
+				else if (CONFIG.HanulWiki.license === 'CC BY-NC') {
+					footer.append(DIV({
+						style : licenseStyle,
+						c : [A({
+							href : 'http://creativecommons.org/licenses/by-nc/4.0/',
+							c : IMG({
+								src : 'https://i.creativecommons.org/l/by-nc/4.0/88x31.png'
+							})
+						}), BR(), '이 저작물은 ', A({
+							href : 'http://creativecommons.org/licenses/by-nc/4.0/',
+							c : '크리에이티브 커먼즈 저작자표시-비영리 4.0 국제 라이선스'
+						}), '에 따라 이용할 수 있습니다.']
+					}));
+				}
+				
+				else if (CONFIG.HanulWiki.license === 'CC BY-NC-SA') {
+					footer.append(DIV({
+						style : licenseStyle,
+						c : [A({
+							href : 'http://creativecommons.org/licenses/by-nc-sa/4.0/',
+							c : IMG({
+								src : 'https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png'
+							})
+						}), BR(), '이 저작물은 ', A({
+							href : 'http://creativecommons.org/licenses/by-nc-sa/4.0/',
+							c : '크리에이티브 커먼즈 저작자표시-비영리-동일조건변경허락 4.0 국제 라이선스'
+						}), '에 따라 이용할 수 있습니다.']
+					}));
+				}
+				
+				else if (CONFIG.HanulWiki.license === 'CC BY-NC-ND') {
+					footer.append(DIV({
+						style : licenseStyle,
+						c : [A({
+							href : 'http://creativecommons.org/licenses/by-nc-nd/4.0/',
+							c : IMG({
+								src : 'https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png'
+							})
+						}), BR(), '이 저작물은 ', A({
+							href : 'http://creativecommons.org/licenses/by-nc-nd/4.0/',
+							c : '크리에이티브 커먼즈 저작자표시-비영리-변경금지 4.0 국제 라이선스'
+						}), '에 따라 이용할 수 있습니다.']
+					}));
+				}
+			}
 			
 			authRoom.send({
 				methodName : 'auth',
