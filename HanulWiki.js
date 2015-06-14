@@ -13,7 +13,8 @@ BOOT({
 			license : 'CC BY-NC-SA',
 			copyright : 'test',
 			mainDocument : '하늘위키',
-			baseColor : '#4183c4'
+			baseColor : '#4183c4',
+			logo : 'logo.png'
 		}
 	},
 	NODE_CONFIG : {

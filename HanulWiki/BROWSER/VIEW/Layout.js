@@ -183,6 +183,22 @@ HanulWiki.Layout = CLASS(function(cls) {
 				
 				if (inner.checkIsClosed() !== true) {
 					
+					if (CONFIG.HanulWiki.logo !== undefined) {
+					
+						menu.append(IMG({
+							style : {
+								flt : 'left',
+								cursor : 'pointer'
+							},
+							src : HanulWiki.R(CONFIG.HanulWiki.logo),
+							on : {
+								tap : function() {
+									HanulWiki.GO('');
+								}
+							}
+						}));
+					}
+					
 					menu.append(H1({
 						style : {
 							flt : 'left',
