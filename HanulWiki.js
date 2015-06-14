@@ -10,7 +10,10 @@ BOOT({
 		HanulWiki : {
 			isPublic : true,
 			//isPrivate : true
-			license : 'CC BY-NC-SA'
+			license : 'CC BY-NC-SA',
+			copyright : 'test',
+			mainDocument : '하늘위키',
+			baseColor : '#4183c4'
 		}
 	},
 	NODE_CONFIG : {

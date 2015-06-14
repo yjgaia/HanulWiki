@@ -17,13 +17,13 @@ HanulWiki.View = CLASS({
 			
 			var
 			// id
-			id = params.id.replace(/@!/g, '/');
+			id = params.id.trim().replace(/ /g, '').toLowerCase().replace(/@!/g, '/');
 			
-			HanulWiki.ArticleModel.get(id, function(articleData) {
+			HanulWiki.ArticleModel.view(id, function(articleData) {
 				
 				var
-				// create time cal
-				createTimeCal = CALENDAR(TIME(articleData.createTime)),
+				// last update time cal
+				lastUpdateTimeCal,
 				
 				// content
 				content,
@@ -34,14 +34,18 @@ HanulWiki.View = CLASS({
 				// change.
 				change;
 				
-				if (inner.checkIsClosed() !== true) {
+				if (articleData === undefined) {
+					HanulWiki.GO('func/new/' + id.replace(/\//g, '@!'));
+				} else if (inner.checkIsClosed() !== true) {
+					
+					lastUpdateTimeCal = CALENDAR(TIME(articleData.lastUpdateTime === undefined ? articleData.createTime : articleData.lastUpdateTime)),
 					
 					wrapper.empty();
 					
 					wrapper.append(UUI.BUTTON({
 						style : {
 							flt : 'left',
-							color : '#4183c4'
+							color : CONFIG.HanulWiki.baseColor
 						},
 						title : '뒤로가기',
 						on : {
@@ -49,6 +53,65 @@ HanulWiki.View = CLASS({
 								history.back();
 							}
 						}
+					}));
+					
+					if (HanulWiki.Layout.checkIsAuthed() === true) {
+						
+						wrapper.append(DIV({
+							style : {
+								marginLeft : 5,
+								flt : 'right',
+								color : CONFIG.HanulWiki.baseColor
+							},
+							c : [A({
+								c : '글 수정',
+								on : {
+									tap : function() {
+										HanulWiki.GO('func/update/' + articleData.id.replace(/\//g, '@!'));
+									}
+								}
+							}), A({
+								style : {
+									marginLeft : 5
+								},
+								c : '글 삭제',
+								on : {
+									tap : function() {
+										
+										if (confirm('정말 삭제하시겠습니까?') === true) {
+											HanulWiki.ArticleModel.remove(articleData.id, function() {
+												HanulWiki.REFRESH('');
+											});
+										}
+									}
+								}
+							})]
+						}));
+					}
+					
+					wrapper.append(DIV({
+						style : {
+							flt : 'right',
+							color : CONFIG.HanulWiki.baseColor
+						},
+						c : [A({
+							c : '역링크',
+							on : {
+								tap : function() {
+									HanulWiki.GO(articleData.id.replace(/\//g, '@!') + '/backlinks');
+								}
+							}
+						}), A({
+							style : {
+								marginLeft : 5
+							},
+							c : '수정 내역',
+							on : {
+								tap : function() {
+									HanulWiki.GO(articleData.id.replace(/\//g, '@!') + '/history');
+								}
+							}
+						})]
 					}));
 					
 					wrapper.append(CLEAR_BOTH());
@@ -65,13 +128,17 @@ HanulWiki.View = CLASS({
 								padding : 10
 							},
 							c : [idDom = SPAN({
+								style : {
+									fontSize : 30,
+									fontWeight : 'bold'
+								},
 								c : articleData.id
 							}), DIV({
 								style : {
 									flt : 'right',
 									marginTop : 1,
 									fontSize : 12,
-									color : '#999'
+									color : '#666'
 								},
 								c : [SPAN({
 									c : '조회수 ' + articleData.viewCount
@@ -79,41 +146,14 @@ HanulWiki.View = CLASS({
 									style : {
 										marginLeft : 10
 									},
-									c : createTimeCal.getYear() + '년 ' + createTimeCal.getMonth() + '월 ' + createTimeCal.getDate() + '일 ' + createTimeCal.getHour() + '시 ' + createTimeCal.getMinute() + '분'
+									c : '최근 수정 시각 ' + lastUpdateTimeCal.getYear() + '년 ' + lastUpdateTimeCal.getMonth() + '월 ' + lastUpdateTimeCal.getDate() + '일 ' + lastUpdateTimeCal.getHour() + '시 ' + lastUpdateTimeCal.getMinute() + '분'
 								})]
 							}), CLEAR_BOTH()]
 						}), DIV({
 							style : {
-								borderTop : '1px solid #ccc',
-								padding : 10
+								padding : '0 10px 10px 10px'
 							},
-							c : [HanulWiki.Layout.checkIsAuthed() === true ? DIV({
-								style : {
-									flt : 'right',
-									color : '#4183c4',
-									marginBottom : 10
-								},
-								c : [A({
-									c : '글 수정',
-									on : {
-										tap : function() {
-											HanulWiki.GO('func/update/' + articleData.id.replace(/\//g, '@!'));
-										}
-									}
-								}), ' ', A({
-									c : '글 삭제',
-									on : {
-										tap : function() {
-											
-											if (confirm('정말 삭제하시겠습니까?') === true) {
-												HanulWiki.ArticleModel.remove(articleData.id, function() {
-													HanulWiki.REFRESH('');
-												});
-											}
-										}
-									}
-								})]
-							}) : '', CLEAR_BOTH(), content = P({
+							c : [content = P({
 								style : {
 									fontSize : 14
 								}

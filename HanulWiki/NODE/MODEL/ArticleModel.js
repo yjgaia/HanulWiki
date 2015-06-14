@@ -1,4 +1,3 @@
-
 OVERRIDE(HanulWiki.ArticleModel, function(origin) {
 	'use strict';
 
@@ -12,7 +11,10 @@ OVERRIDE(HanulWiki.ArticleModel, function(origin) {
 			
 			var
 			// id store
-			idStore = SHARED_STORE('idStore');
+			idStore = SHARED_STORE('idStore'),
+			
+			// history db
+			historyDB = HanulWiki.DB('Article__HISTORY');
 			
 			if (CPU_CLUSTERING.getWorkerId() === 1) {
 			
@@ -124,6 +126,15 @@ OVERRIDE(HanulWiki.ArticleModel, function(origin) {
 						name : 'ids',
 						value : ids
 					});
+					
+					EACH(savedData.keywords, function(keyword) {
+						self.updateNoHistory({
+							id : keyword,
+							$addToSet : {
+								backLinks : savedData.id
+							}
+						});
+					});
 				}
 			});
 			
@@ -163,6 +174,18 @@ OVERRIDE(HanulWiki.ArticleModel, function(origin) {
 							}
 						});
 					}
+				},
+				
+				after : function(savedData) {
+					
+					EACH(savedData.keywords, function(keyword) {
+						self.updateNoHistory({
+							id : keyword,
+							$addToSet : {
+								backLinks : savedData.id
+							}
+						});
+					});
 				}
 			});
 			
@@ -186,16 +209,35 @@ OVERRIDE(HanulWiki.ArticleModel, function(origin) {
 				}
 			});
 			
-			inner.on('get', function(savedData) {
-				
-				self.update({
-					id : savedData.id,
-					$inc : {
-						viewCount : 1
+			HanulWiki.ROOM(self.getName(), function(clientInfo, on) {
+
+				on('view', function(id, ret) {
+					
+					if (id !== undefined) {
+					
+						self.updateNoHistory({
+							id : id,
+							$inc : {
+								viewCount : 1
+							}
+						}, {
+							notExists : ret,
+							success : ret
+						});
 					}
 				});
 				
-				savedData.viewCount += 1;
+				on('findHistory', function(id, ret) {
+					
+					if (id !== undefined) {
+					
+						historyDB.find({
+							filter : {
+								docId : id
+							}
+						}, ret);
+					}
+				});
 			});
 		}
 	});

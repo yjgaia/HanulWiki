@@ -22,11 +22,16 @@ HanulWiki.ArticleModel = OBJECT({
 				notEmpty : true
 			},
 			keywords : {
+				notEmpty : true,
 				array : true
 			},
 			viewCount : {
 				notEmpty : true,
 				integer : true
+			},
+			backLinks : {
+				notEmpty : true,
+				array : true
 			}
 		};
 
@@ -34,7 +39,9 @@ HanulWiki.ArticleModel = OBJECT({
 			name : 'Article',
 			isNotUsingObjectId : true,
 			initData : {
-				viewCount : 0
+				viewCount : 0,
+				keywords : [],
+				backLinks : []
 			},
 			methodConfig : {
 				create : {

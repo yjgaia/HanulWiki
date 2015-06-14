@@ -5,6 +5,7 @@ HanulWiki.MAIN = METHOD({
 		
 		HanulWiki.MATCH_VIEW({
 			uri : '**',
+			excludeURI : 'func/markdown-sample',
 			target : HanulWiki.Layout
 		});
 
@@ -19,13 +20,38 @@ HanulWiki.MAIN = METHOD({
 		});
 		
 		HanulWiki.MATCH_VIEW({
-			uri : ['func/new', 'func/update/{id}'],
+			uri : '{id}/history',
+			target : HanulWiki.History
+		});
+		
+		HanulWiki.MATCH_VIEW({
+			uri : '{id}/backlinks',
+			target : HanulWiki.BackLinks
+		});
+		
+		HanulWiki.MATCH_VIEW({
+			uri : ['func/new', 'func/new/{id}', 'func/update/{id}'],
 			target : HanulWiki.Form
+		});
+		
+		HanulWiki.MATCH_VIEW({
+			uri : 'func/markdown-sample',
+			target : HanulWiki.MarkdownSample
 		});
 		
 		HanulWiki.MATCH_VIEW({
 			uri : 'func/login',
 			target : HanulWiki.Login
 		});
+		
+		/*HanulWiki.MATCH_VIEW({
+			uri : 'board/login',
+			target : HanulWiki.Login
+		});
+		
+		HanulWiki.MATCH_VIEW({
+			uri : 'board/login',
+			target : HanulWiki.Login
+		});*/
 	}
 });

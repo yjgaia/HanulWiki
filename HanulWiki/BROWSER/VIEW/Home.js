@@ -10,44 +10,27 @@ HanulWiki.Home = CLASS({
 		'use strict';
 
 		var
-		// recent list
-		recentList,
-		
 		// popular list
 		popularList,
 		
+		// recent list
+		recentList,
+		
+		// recent update list
+		recentUpdateList,
+		
 		// wrapper
 		wrapper = DIV({
-			c : [CONFIG.description === undefined ? '' : P({
-				style : {
-					marginBottom : 20
-				},
-				c : CONFIG.description
-			}), DIV({
-				c : [recentList = DIV({
+			c : [DIV({
+				c : [popularList = DIV({
 					style : {
+						marginRight : 10,
 						flt : 'left',
 						border : '1px solid #ccc'
 					},
 					c : H2({
 						style : {
-							backgroundColor : '#4183C4',
-							color : '#fff',
-							fontWeight : 'bold',
-							padding : 5,
-							textAlign : 'center'
-						},
-						c : '최신글'
-					})
-				}), popularList = DIV({
-					style : {
-						marginLeft : 10,
-						flt : 'left',
-						border : '1px solid #ccc'
-					},
-					c : H2({
-						style : {
-							backgroundColor : '#4183C4',
+							backgroundColor : CONFIG.HanulWiki.baseColor,
 							color : '#fff',
 							fontWeight : 'bold',
 							padding : 5,
@@ -55,11 +38,89 @@ HanulWiki.Home = CLASS({
 						},
 						c : '인기글'
 					})
+				}), recentList = DIV({
+					style : {
+						marginRight : 10,
+						flt : 'left',
+						border : '1px solid #ccc'
+					},
+					c : H2({
+						style : {
+							backgroundColor : CONFIG.HanulWiki.baseColor,
+							color : '#fff',
+							fontWeight : 'bold',
+							padding : 5,
+							textAlign : 'center'
+						},
+						c : '최신글'
+					})
+				}), recentUpdateList = DIV({
+					style : {
+						flt : 'left',
+						border : '1px solid #ccc'
+					},
+					c : H2({
+						style : {
+							backgroundColor : CONFIG.HanulWiki.baseColor,
+							color : '#fff',
+							fontWeight : 'bold',
+							padding : 5,
+							textAlign : 'center'
+						},
+						c : '최근 수정글'
+					})
 				}), CLEAR_BOTH()]
 			})]
 		}).appendTo(HanulWiki.Layout.getContent());
 		
 		TITLE(CONFIG.title);
+		
+		HanulWiki.ArticleModel.find({
+			count : 20,
+			sort : {
+				viewCount : -1
+			}
+		}, EACH(function(articleData) {
+			
+			var
+			// article link
+			articleLink;
+			
+			if (inner.checkIsClosed() !== true) {
+				
+				popularList.append(DIV({
+					style : {
+						padding : 5
+					},
+					c : [articleLink = A({
+						style : {
+							color : CONFIG.HanulWiki.baseColor
+						},
+						c : articleData.id,
+						on : {
+							tap : function(e) {
+								HanulWiki.GO(articleData.id.replace(/\//g, '@!'));
+							}
+						}
+					}), SPAN({
+						style : {
+							marginLeft : 5,
+							fontSize : 10
+						},
+						c : '(' + articleData.viewCount + ')'
+					})]
+				}));
+				
+				GET({
+					host : 'tagengine.btncafe.com',
+					uri : '__REP_TAG',
+					paramStr : 'tag=' + encodeURIComponent(articleData.id)
+				}, function(id) {
+					articleLink.empty();
+					articleLink.append(id);
+				});
+			}
+		}));
 		
 		HanulWiki.ArticleModel.find({
 			count : 20
@@ -77,7 +138,7 @@ HanulWiki.Home = CLASS({
 					},
 					c : [articleLink = A({
 						style : {
-							color : '#4183c4'
+							color : CONFIG.HanulWiki.baseColor
 						},
 						c : articleData.id,
 						on : {
@@ -108,7 +169,7 @@ HanulWiki.Home = CLASS({
 		HanulWiki.ArticleModel.find({
 			count : 20,
 			sort : {
-				viewCount : -1
+				lastUpdateTime : -1
 			}
 		}, EACH(function(articleData) {
 			
@@ -118,13 +179,13 @@ HanulWiki.Home = CLASS({
 			
 			if (inner.checkIsClosed() !== true) {
 				
-				popularList.append(DIV({
+				recentUpdateList.append(DIV({
 					style : {
 						padding : 5
 					},
 					c : [articleLink = A({
 						style : {
-							color : '#4183c4'
+							color : CONFIG.HanulWiki.baseColor
 						},
 						c : articleData.id,
 						on : {
@@ -151,6 +212,99 @@ HanulWiki.Home = CLASS({
 				});
 			}
 		}));
+		
+		if (CONFIG.HanulWiki.mainDocument !== undefined) {
+			
+			HanulWiki.ArticleModel.get(CONFIG.HanulWiki.mainDocument, function(articleData) {
+				
+				var
+				// content
+				content,
+				
+				// change.
+				change;
+				
+				wrapper.prepend(content = DIV({
+					style : {
+						marginBottom : 10
+					}
+				}));
+				
+				content.getEl().setAttribute('class', 'markdown-body');
+				content.getEl().innerHTML = marked(articleData.content);
+				
+				change = function(el) {
+					
+					var
+					// text content
+					textContent,
+					
+					// cleaned content
+					cleanedContent = '',
+					
+					// content index set
+					contentIndexSet = [],
+					
+					// append count
+					appendCount = 0,
+					
+					// new el
+					newEl,
+					
+					// i
+					i;
+					
+					if (el.tagName !== 'A') {
+						
+						if (el.tagName === undefined) {
+							
+							textContent = el.textContent;
+							
+							EACH(el.textContent, function(ch, i) {
+								if (ch !== ' ') {
+									contentIndexSet[cleanedContent.length] = i;
+									cleanedContent += ch.toLowerCase();
+								}
+							});
+							
+							EACH(contentIndexSet, function(contentIndex, i) {
+		
+								EACH(articleData.keywords, function(keyword) {
+									
+									var
+									// href
+									href;
+									
+									if (cleanedContent.substring(i, i + keyword.length) === keyword) {
+	
+										textContent = textContent.substring(0, contentIndex + appendCount)
+										+ '<a href="' + keyword.replace(/\//g, '@!') + '" onclick="HanulWiki.GO(\'' + keyword.replace(/\//g, '@!') + '\'); return false;">' + textContent.substring(contentIndex + appendCount, contentIndexSet[i + keyword.length - 1] + appendCount + 1) + '</a>'
+										+ textContent.substring(contentIndexSet[i + keyword.length - 1] + appendCount + 1);
+										
+										appendCount += 15 + 42 + keyword.replace(/\//g, '@!').length * 2;
+										
+										return false;
+									}
+								});
+							});
+							
+							newEl = document.createElement('span');
+							newEl.innerHTML = textContent;
+							
+							el.parentNode.insertBefore(newEl, el);
+							el.remove();
+							
+						} else {
+							for (i = 0; i < el.childNodes.length; i += 1) {
+								change(el.childNodes[i]);
+							}
+						}
+					}
+				};
+				
+				change(content.getEl());
+			});
+		}
 		
 		inner.on('close', function() {
 			wrapper.remove();

@@ -35,7 +35,7 @@ HanulWiki.Login = CLASS({
 				}), UUI.FULL_SUBMIT({
 					style : {
 						marginTop : 10,
-						backgroundColor : '#4183C4',
+						backgroundColor : CONFIG.HanulWiki.baseColor,
 						color : '#fff',
 						fontWeight : 'bold'
 					},
