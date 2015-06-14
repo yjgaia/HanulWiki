@@ -79,7 +79,9 @@ HanulWiki.Talk = CLASS({
 			})]
 		}).appendTo(HanulWiki.Layout.getContent());
 		
-		onNewAndFindRoom = HanulWiki.TalkModel.onNewAndFind(function(talkData) {
+		onNewAndFindRoom = HanulWiki.TalkModel.onNewAndFind({
+			count : 100
+		}, function(talkData) {
 			list.append(P({
 				c : talkData.ip + ': ' + talkData.content
 			}));

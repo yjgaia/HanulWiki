@@ -185,8 +185,8 @@ HanulWiki.View = CLASS({
 							// new el
 							newEl,
 							
-							// i
-							i;
+							// extras
+							i, contentIndex;
 							
 							if (el.tagName !== 'A') {
 								
@@ -201,7 +201,8 @@ HanulWiki.View = CLASS({
 										}
 									});
 									
-									EACH(contentIndexSet, function(contentIndex, i) {
+									for (i = 0; i <= contentIndexSet.length; i += 1) {
+										contentIndex = contentIndexSet[i];
 				
 										EACH(articleData.keywords, function(keyword) {
 											
@@ -216,11 +217,12 @@ HanulWiki.View = CLASS({
 												+ textContent.substring(contentIndexSet[i + keyword.length - 1] + appendCount + 1);
 												
 												appendCount += 15 + 42 + keyword.replace(/\//g, '@!').length * 2;
+												i += keyword.length;
 												
 												return false;
 											}
 										});
-									});
+									}
 									
 									newEl = document.createElement('span');
 									newEl.innerHTML = textContent;
