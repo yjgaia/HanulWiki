@@ -69,20 +69,42 @@ HanulWiki.History = CLASS({
 						
 							cal = CALENDAR(TIME(history.time));
 							
-							wrapper.append(DOM({
+							wrapper.append(DIV({
 								style : {
-									marginTop : 10
+									marginTop : 15
 								},
-								el : diffview.buildView({
-							        baseTextLines : historyArticleString,
-							        newTextLines : nowArticleString,
-							        opcodes : new difflib.SequenceMatcher(historyArticleString, nowArticleString).get_opcodes(),
-							        // set the display titles for each resource
-							        baseTextName : history.change.ip + '가 ' + cal.getYear() + '년 ' + cal.getMonth() + '월 ' + cal.getDate() + '일 ' + cal.getHour() + '시 ' + cal.getMinute() + '분' + '에 저장한 내용',
-							        newTextName : '현재 내용',
-							        contextSize : '100%',
-							        viewType : 1
-							    })
+								c : [A({
+									style : {
+										color : CONFIG.HanulWiki.baseColor
+									},
+									c : '이 버젼으로 되돌리기',
+									on : {
+										tap : function() {
+											if (confirm('이 버젼으로 되돌리시겠습니까?') === true) {
+												HanulWiki.ArticleModel.update({
+													id : id,
+													content : history.change.content
+												}, function() {
+													HanulWiki.GO(id.replace(/\//g, '@!'));
+												});
+											}
+										}
+									}
+								}), DOM({
+									style : {
+										marginTop : 5
+									},
+									el : diffview.buildView({
+								        baseTextLines : historyArticleString,
+								        newTextLines : nowArticleString,
+								        opcodes : new difflib.SequenceMatcher(historyArticleString, nowArticleString).get_opcodes(),
+								        // set the display titles for each resource
+								        baseTextName : history.change.ip + '가 ' + cal.getYear() + '년 ' + cal.getMonth() + '월 ' + cal.getDate() + '일 ' + cal.getHour() + '시 ' + cal.getMinute() + '분' + '에 저장한 내용',
+								        newTextName : '현재 내용',
+								        contextSize : '100%',
+								        viewType : 1
+								    })
+								})]
 							}));
 						}
 					});

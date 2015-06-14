@@ -37,6 +37,9 @@ HanulWiki.Layout = CLASS(function(cls) {
 		init : function(inner, self) {
 
 			var
+			// scroll store
+			scrollStore = HanulWiki.STORE('scroll'),
+			
 			// password store
 			passwordStore = HanulWiki.STORE('passwordStore'),
 			
@@ -210,6 +213,7 @@ HanulWiki.Layout = CLASS(function(cls) {
 							src : HanulWiki.R(CONFIG.HanulWiki.logo),
 							on : {
 								tap : function() {
+									scrollStore.remove('top');
 									HanulWiki.GO('');
 								}
 							}
@@ -226,6 +230,7 @@ HanulWiki.Layout = CLASS(function(cls) {
 						c : CONFIG.title,
 						on : {
 							tap : function() {
+								scrollStore.remove('top');
 								HanulWiki.GO('');
 							}
 						}
@@ -268,6 +273,7 @@ HanulWiki.Layout = CLASS(function(cls) {
 						title : '처음으로',
 						on : {
 							tap : function() {
+								scrollStore.remove('top');
 								HanulWiki.GO('');
 							}
 						}
@@ -302,6 +308,23 @@ HanulWiki.Layout = CLASS(function(cls) {
 						}));
 					}
 					
+					menu.append(UUI.BUTTON_H({
+						style : {
+							flt : 'left',
+							padding : 10
+						},
+						title : '랜덤',
+						on : {
+							tap : function() {
+								HanulWiki.ArticleModel.get({
+									isRandom : true
+								}, function(articleData) {
+									HanulWiki.GO(articleData.id.replace(/\//g, '@!'));
+								});
+							}
+						}
+					}));
+					
 					menu.append(countDom = DIV({
 						style : {
 							flt : 'right',
@@ -328,6 +351,7 @@ HanulWiki.Layout = CLASS(function(cls) {
 			});
 			
 			inner.on('close', function() {
+				scrollEvent.remove();
 				authRoom.exit();
 				layout.remove();
 				content = undefined;

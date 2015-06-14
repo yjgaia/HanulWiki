@@ -16,6 +16,9 @@ HanulWiki.Talk = CLASS({
 		// on new and find room
 		onNewAndFindRoom,
 		
+		// content input
+		contentInput,
+		
 		// wrapper
 		wrapper = DIV({
 			c : [list = UUI.LIST({
@@ -36,7 +39,7 @@ HanulWiki.Talk = CLASS({
 						marginBottom : 5
 					},
 					c : '전송을 누르면  IP 주소가 서버에 저장되고, 목록에 공개되는것에 동의합니다. 이 동의는 철회할 수 없습니다.'
-				}), UUI.FULL_INPUT({
+				}), contentInput = UUI.FULL_INPUT({
 					style : {
 						flt : 'left',
 						onDisplayResize : function(width, height) {
@@ -69,6 +72,7 @@ HanulWiki.Talk = CLASS({
 								content : content
 							});
 							form.setData({});
+							contentInput.focus();
 						}
 					}
 				}
