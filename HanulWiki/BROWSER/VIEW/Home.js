@@ -10,6 +10,9 @@ HanulWiki.Home = CLASS({
 		'use strict';
 
 		var
+		// browser info
+		browserInfo = INFO.getBrowserInfo(),
+		
 		// popular list
 		popularList,
 		
@@ -22,13 +25,14 @@ HanulWiki.Home = CLASS({
 		// wrapper
 		wrapper = DIV({
 			c : [DIV({
-				c : [popularList = DIV({
+				c : [DIV({
 					style : {
 						marginRight : 10,
+						marginBottom : 10,
 						flt : 'left',
 						border : '1px solid #ccc'
 					},
-					c : H2({
+					c : [H2({
 						style : {
 							backgroundColor : CONFIG.HanulWiki.baseColor,
 							color : '#fff',
@@ -37,14 +41,17 @@ HanulWiki.Home = CLASS({
 							textAlign : 'center'
 						},
 						c : '인기글'
-					})
-				}), recentList = DIV({
+					}), popularList = DIV({
+						c : '로딩중...'
+					})]
+				}), DIV({
 					style : {
 						marginRight : 10,
+						marginBottom : 10,
 						flt : 'left',
 						border : '1px solid #ccc'
 					},
-					c : H2({
+					c : [H2({
 						style : {
 							backgroundColor : CONFIG.HanulWiki.baseColor,
 							color : '#fff',
@@ -53,13 +60,16 @@ HanulWiki.Home = CLASS({
 							textAlign : 'center'
 						},
 						c : '최신글'
-					})
-				}), recentUpdateList = DIV({
+					}), recentList = DIV({
+						c : '로딩중...'
+					})]
+				}), DIV({
 					style : {
+						marginBottom : 10,
 						flt : 'left',
 						border : '1px solid #ccc'
 					},
-					c : H2({
+					c : [H2({
 						style : {
 							backgroundColor : CONFIG.HanulWiki.baseColor,
 							color : '#fff',
@@ -68,7 +78,9 @@ HanulWiki.Home = CLASS({
 							textAlign : 'center'
 						},
 						c : '최근 수정글'
-					})
+					}), recentUpdateList = DIV({
+						c : '로딩중...'
+					})]
 				}), CLEAR_BOTH()]
 			})]
 		}).appendTo(HanulWiki.Layout.getContent());
@@ -80,138 +92,153 @@ HanulWiki.Home = CLASS({
 			sort : {
 				viewCount : -1
 			}
-		}, EACH(function(articleData) {
+		}, function(articleDataSet) {
+					
+			popularList.empty();
 			
-			var
-			// article link
-			articleLink;
-			
-			if (inner.checkIsClosed() !== true) {
+			EACH(articleDataSet, function(articleData) {
 				
-				popularList.append(DIV({
-					style : {
-						padding : 5
-					},
-					c : [articleLink = A({
+				var
+				// article link
+				articleLink;
+				
+				if (inner.checkIsClosed() !== true) {
+					
+					popularList.append(DIV({
 						style : {
-							color : CONFIG.HanulWiki.baseColor
+							padding : 5
 						},
-						c : articleData.id,
-						on : {
-							tap : function(e) {
-								HanulWiki.GO(articleData.id.replace(/\//g, '@!'));
+						c : [articleLink = A({
+							style : {
+								color : CONFIG.HanulWiki.baseColor
+							},
+							c : articleData.id,
+							on : {
+								tap : function(e) {
+									HanulWiki.GO(articleData.id.replace(/\//g, '@!'));
+								}
 							}
-						}
-					}), SPAN({
-						style : {
-							marginLeft : 5,
-							fontSize : 10
-						},
-						c : '(' + articleData.viewCount + ')'
-					})]
-				}));
-				
-				GET({
-					host : 'tagengine.btncafe.com',
-					uri : '__REP_TAG',
-					paramStr : 'tag=' + encodeURIComponent(articleData.id)
-				}, function(id) {
-					articleLink.empty();
-					articleLink.append(id);
-				});
-			}
-		}));
+						}), SPAN({
+							style : {
+								marginLeft : 5,
+								fontSize : 10
+							},
+							c : '(' + articleData.viewCount + ')'
+						})]
+					}));
+					
+					GET({
+						host : 'tagengine.btncafe.com',
+						uri : '__REP_TAG',
+						paramStr : 'tag=' + encodeURIComponent(articleData.id)
+					}, function(id) {
+						articleLink.empty();
+						articleLink.append(id);
+					});
+				}
+			});
+		});
 		
 		HanulWiki.ArticleModel.find({
 			count : 20
-		}, EACH(function(articleData) {
+		}, function(articleDataSet) {
+					
+			recentList.empty();
 			
-			var
-			// article link
-			articleLink;
-			
-			if (inner.checkIsClosed() !== true) {
+			EACH(articleDataSet, function(articleData) {
 				
-				recentList.append(DIV({
-					style : {
-						padding : 5
-					},
-					c : [articleLink = A({
+				var
+				// article link
+				articleLink;
+				
+				if (inner.checkIsClosed() !== true) {
+					
+					recentList.append(DIV({
 						style : {
-							color : CONFIG.HanulWiki.baseColor
+							padding : 5
 						},
-						c : articleData.id,
-						on : {
-							tap : function(e) {
-								HanulWiki.GO(articleData.id.replace(/\//g, '@!'));
+						c : [articleLink = A({
+							style : {
+								color : CONFIG.HanulWiki.baseColor
+							},
+							c : articleData.id,
+							on : {
+								tap : function(e) {
+									HanulWiki.GO(articleData.id.replace(/\//g, '@!'));
+								}
 							}
-						}
-					}), SPAN({
-						style : {
-							marginLeft : 5,
-							fontSize : 10
-						},
-						c : '(' + articleData.viewCount + ')'
-					})]
-				}));
-				
-				GET({
-					host : 'tagengine.btncafe.com',
-					uri : '__REP_TAG',
-					paramStr : 'tag=' + encodeURIComponent(articleData.id)
-				}, function(id) {
-					articleLink.empty();
-					articleLink.append(id);
-				});
-			}
-		}));
+						}), SPAN({
+							style : {
+								marginLeft : 5,
+								fontSize : 10
+							},
+							c : '(' + articleData.viewCount + ')'
+						})]
+					}));
+					
+					GET({
+						host : 'tagengine.btncafe.com',
+						uri : '__REP_TAG',
+						paramStr : 'tag=' + encodeURIComponent(articleData.id)
+					}, function(id) {
+						articleLink.empty();
+						articleLink.append(id);
+					});
+				}
+			});
+		});
 		
 		HanulWiki.ArticleModel.find({
 			count : 20,
 			sort : {
 				lastUpdateTime : -1
 			}
-		}, EACH(function(articleData) {
+		}, function(articleDataSet) {
+					
+			recentUpdateList.empty();
 			
-			var
-			// article link
-			articleLink;
-			
-			if (inner.checkIsClosed() !== true) {
+			EACH(articleDataSet, function(articleData) {
 				
-				recentUpdateList.append(DIV({
-					style : {
-						padding : 5
-					},
-					c : [articleLink = A({
+				var
+				// article link
+				articleLink;
+				
+				if (inner.checkIsClosed() !== true) {
+					
+					recentUpdateList.append(DIV({
 						style : {
-							color : CONFIG.HanulWiki.baseColor
+							padding : 5
 						},
-						c : articleData.id,
-						on : {
-							tap : function(e) {
-								HanulWiki.GO(articleData.id.replace(/\//g, '@!'));
+						c : [articleLink = A({
+							style : {
+								color : CONFIG.HanulWiki.baseColor
+							},
+							c : articleData.id,
+							on : {
+								tap : function(e) {
+									HanulWiki.GO(articleData.id.replace(/\//g, '@!'));
+								}
 							}
-						}
-					}), SPAN({
-						style : {
-							marginLeft : 5,
-							fontSize : 10
-						},
-						c : '(' + articleData.viewCount + ')'
-					})]
-				}));
-				
-				GET({
-					host : 'tagengine.btncafe.com',
-					uri : '__REP_TAG',
-					paramStr : 'tag=' + encodeURIComponent(articleData.id)
-				}, function(id) {
-					articleLink.empty();
-					articleLink.append(id);
-				});
-			}
-		}));
+						}), SPAN({
+							style : {
+								marginLeft : 5,
+								fontSize : 10
+							},
+							c : '(' + articleData.viewCount + ')'
+						})]
+					}));
+					
+					GET({
+						host : 'tagengine.btncafe.com',
+						uri : '__REP_TAG',
+						paramStr : 'tag=' + encodeURIComponent(articleData.id)
+					}, function(id) {
+						articleLink.empty();
+						articleLink.append(id);
+					});
+				}
+			});
+		});
 		
 		if (CONFIG.HanulWiki.mainDocument !== undefined) {
 			
@@ -226,83 +253,89 @@ HanulWiki.Home = CLASS({
 				
 				wrapper.prepend(content = DIV({
 					style : {
+						fontSize : 14,
 						marginBottom : 10
 					}
 				}));
 				
-				content.getEl().setAttribute('class', 'markdown-body');
-				content.getEl().innerHTML = marked(articleData.content);
-				
-				change = function(el) {
+				if (browserInfo.name === 'Internet Explorer' && browserInfo.version < 9) {
+					content.append(articleData.content);
+				} else {
 					
-					var
-					// text content
-					textContent,
+					content.getEl().setAttribute('class', 'markdown-body');
+					content.getEl().innerHTML = marked(articleData.content);
 					
-					// cleaned content
-					cleanedContent = '',
-					
-					// content index set
-					contentIndexSet = [],
-					
-					// append count
-					appendCount = 0,
-					
-					// new el
-					newEl,
-					
-					// i
-					i;
-					
-					if (el.tagName !== 'A') {
+					change = function(el) {
 						
-						if (el.tagName === undefined) {
+						var
+						// text content
+						textContent,
+						
+						// cleaned content
+						cleanedContent = '',
+						
+						// content index set
+						contentIndexSet = [],
+						
+						// append count
+						appendCount = 0,
+						
+						// new el
+						newEl,
+						
+						// i
+						i;
+						
+						if (el.tagName !== 'A') {
 							
-							textContent = el.textContent;
-							
-							EACH(el.textContent, function(ch, i) {
-								if (ch !== ' ') {
-									contentIndexSet[cleanedContent.length] = i;
-									cleanedContent += ch.toLowerCase();
-								}
-							});
-							
-							EACH(contentIndexSet, function(contentIndex, i) {
-		
-								EACH(articleData.keywords, function(keyword) {
-									
-									var
-									// href
-									href;
-									
-									if (cleanedContent.substring(i, i + keyword.length) === keyword) {
-	
-										textContent = textContent.substring(0, contentIndex + appendCount)
-										+ '<a href="' + keyword.replace(/\//g, '@!') + '" onclick="HanulWiki.GO(\'' + keyword.replace(/\//g, '@!') + '\'); return false;">' + textContent.substring(contentIndex + appendCount, contentIndexSet[i + keyword.length - 1] + appendCount + 1) + '</a>'
-										+ textContent.substring(contentIndexSet[i + keyword.length - 1] + appendCount + 1);
-										
-										appendCount += 15 + 42 + keyword.replace(/\//g, '@!').length * 2;
-										
-										return false;
+							if (el.tagName === undefined) {
+								
+								textContent = el.textContent;
+								
+								EACH(el.textContent, function(ch, i) {
+									if (ch !== ' ') {
+										contentIndexSet[cleanedContent.length] = i;
+										cleanedContent += ch.toLowerCase();
 									}
 								});
-							});
-							
-							newEl = document.createElement('span');
-							newEl.innerHTML = textContent;
-							
-							el.parentNode.insertBefore(newEl, el);
-							el.remove();
-							
-						} else {
-							for (i = 0; i < el.childNodes.length; i += 1) {
-								change(el.childNodes[i]);
+								
+								EACH(contentIndexSet, function(contentIndex, i) {
+			
+									EACH(articleData.keywords, function(keyword) {
+										
+										var
+										// href
+										href;
+										
+										if (cleanedContent.substring(i, i + keyword.length) === keyword) {
+		
+											textContent = textContent.substring(0, contentIndex + appendCount)
+											+ '<a href="' + keyword.replace(/\//g, '@!') + '" onclick="HanulWiki.GO(\'' + keyword.replace(/\//g, '@!') + '\'); return false;">' + textContent.substring(contentIndex + appendCount, contentIndexSet[i + keyword.length - 1] + appendCount + 1) + '</a>'
+											+ textContent.substring(contentIndexSet[i + keyword.length - 1] + appendCount + 1);
+											
+											appendCount += 15 + 42 + keyword.replace(/\//g, '@!').length * 2;
+											
+											return false;
+										}
+									});
+								});
+								
+								newEl = document.createElement('span');
+								newEl.innerHTML = textContent;
+								
+								el.parentNode.insertBefore(newEl, el);
+								el.parentNode.removeChild(el);
+								
+							} else {
+								for (i = 0; i < el.childNodes.length; i += 1) {
+									change(el.childNodes[i]);
+								}
 							}
 						}
-					}
-				};
-				
-				change(content.getEl());
+					};
+					
+					change(content.getEl());
+				}
 			});
 		}
 		

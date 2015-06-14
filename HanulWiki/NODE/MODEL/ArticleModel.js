@@ -53,7 +53,7 @@ OVERRIDE(HanulWiki.ArticleModel, function(origin) {
 
 			inner.on('create', {
 			
-				before : function(data, next, ret) {
+				before : function(data, next, ret, clientInfo) {
 					
 					var
 					// cleaned content
@@ -63,6 +63,7 @@ OVERRIDE(HanulWiki.ArticleModel, function(origin) {
 					ids = idStore.get('ids');
 					
 					data.keywords = [];
+					data.ip = clientInfo.ip;
 					
 					EACH(ids, function(id, i) {
 						
@@ -140,7 +141,7 @@ OVERRIDE(HanulWiki.ArticleModel, function(origin) {
 			
 			inner.on('update', {
 				
-				before : function(data, next) {
+				before : function(data, next, ret, clientInfo) {
 					
 					var
 					// cleaned content
@@ -155,6 +156,7 @@ OVERRIDE(HanulWiki.ArticleModel, function(origin) {
 						ids = idStore.get('ids');
 					
 						data.keywords = [];
+						data.ip = clientInfo.ip;
 						
 						EACH(ids, function(id, i) {
 							
@@ -176,16 +178,19 @@ OVERRIDE(HanulWiki.ArticleModel, function(origin) {
 					}
 				},
 				
-				after : function(savedData) {
+				after : function(savedData, originData) {
 					
-					EACH(savedData.keywords, function(keyword) {
-						self.updateNoHistory({
-							id : keyword,
-							$addToSet : {
-								backLinks : savedData.id
-							}
+					if (savedData.content !== originData.content) {
+					
+						EACH(savedData.keywords, function(keyword) {
+							self.updateNoHistory({
+								id : keyword,
+								$addToSet : {
+									backLinks : savedData.id
+								}
+							});
 						});
-					});
+					}
 				}
 			});
 			
@@ -205,6 +210,15 @@ OVERRIDE(HanulWiki.ArticleModel, function(origin) {
 					idStore.save({
 						name : 'ids',
 						value : ids
+					});
+					
+					EACH(originData.keywords, function(keyword) {
+						self.updateNoHistory({
+							id : keyword,
+							$pull : {
+								backLinks : originData.id
+							}
+						});
 					});
 				}
 			});
@@ -234,6 +248,9 @@ OVERRIDE(HanulWiki.ArticleModel, function(origin) {
 						historyDB.find({
 							filter : {
 								docId : id
+							},
+							sort : {
+								time : -1
 							}
 						}, ret);
 					}

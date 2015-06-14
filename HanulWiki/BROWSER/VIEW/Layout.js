@@ -4,7 +4,8 @@ HanulWiki.Layout = CLASS(function(cls) {
 	var
 	// license style
 	licenseStyle = {
-		fontSize : 12
+		fontSize : 12,
+		marginTop : 10
 	},
 	
 	// is authed
@@ -45,6 +46,9 @@ HanulWiki.Layout = CLASS(function(cls) {
 			// menu
 			menu,
 			
+			// count dom
+			countDom,
+			
 			// footer
 			footer,
 			
@@ -72,7 +76,7 @@ HanulWiki.Layout = CLASS(function(cls) {
 					style : {
 						borderTop : '1px solid #ccc',
 						backgroundColor : '#eee',
-						padding : 10
+						padding : '0 10px 10px 10px'
 					}
 				})]
 			}).appendTo(BODY);
@@ -174,6 +178,19 @@ HanulWiki.Layout = CLASS(function(cls) {
 				}));
 			}
 			
+			footer.append(DIV({
+				style : licenseStyle,
+				c : [CONFIG.title + '는 ', A({
+					target : '_blank',
+					href : 'https://github.com/Hanul/HanulWiki',
+					c : '하늘 위키'
+				}), '를 기반으로 합니다. ', A({
+					target : '_blank',
+					href : 'https://github.com/Hanul/HanulWiki',
+					c : '하늘 위키'
+				}), '는 오픈소스 소프트웨어 입니다.']
+			}));
+			
 			authRoom.send({
 				methodName : 'auth',
 				data : passwordStore.get('password')
@@ -203,7 +220,8 @@ HanulWiki.Layout = CLASS(function(cls) {
 						style : {
 							flt : 'left',
 							padding : 10,
-							cursor : 'pointer'
+							cursor : 'pointer',
+							fontWeight : 'bold'
 						},
 						c : CONFIG.title,
 						on : {
@@ -219,14 +237,14 @@ HanulWiki.Layout = CLASS(function(cls) {
 						},
 						c : [UUI.FULL_INPUT({
 							style : {
-								marginTop : 5,
+								margin : '5px 0',
 								flt : 'left',
 								width : 100
 							},
 							name : 'id'
 						}), UUI.FULL_SUBMIT({
 							style : {
-								marginTop : 5,
+								margin : '5px 0',
 								flt : 'left',
 								width : 50,
 								padding : 5,
@@ -267,6 +285,37 @@ HanulWiki.Layout = CLASS(function(cls) {
 							}
 						}
 					}));
+					
+					if (isAuthed === true) {
+					
+						menu.append(UUI.BUTTON_H({
+							style : {
+								flt : 'left',
+								padding : 10
+							},
+							title : '토론',
+							on : {
+								tap : function() {
+									HanulWiki.GO('func/talk');
+								}
+							}
+						}));
+					}
+					
+					menu.append(countDom = DIV({
+						style : {
+							flt : 'right',
+							padding : 10
+						},
+						title : '전체 항목 수: 로딩중...'
+					}));
+					
+					HanulWiki.ArticleModel.count(function(count) {
+						if (inner.checkIsClosed() !== true) {
+							countDom.empty();
+							countDom.append('전체 항목 수: ' + count);
+						}
+					});
 					
 					menu.append(CLEAR_BOTH());
 				}

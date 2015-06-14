@@ -74,14 +74,14 @@ HanulWiki.History = CLASS({
 									marginTop : 10
 								},
 								el : diffview.buildView({
-							        baseTextLines: historyArticleString,
-							        newTextLines: nowArticleString,
-							        opcodes: new difflib.SequenceMatcher(historyArticleString, nowArticleString).get_opcodes(),
+							        baseTextLines : historyArticleString,
+							        newTextLines : nowArticleString,
+							        opcodes : new difflib.SequenceMatcher(historyArticleString, nowArticleString).get_opcodes(),
 							        // set the display titles for each resource
-							        baseTextName: cal.getYear() + '년 ' + cal.getMonth() + '월 ' + cal.getDate() + '일 ' + cal.getHour() + '시 ' + cal.getMinute() + '분' + '에 저장된 내용',
-							        newTextName: '현재 내용',
-							        contextSize: '100%',
-							        viewType: 1
+							        baseTextName : history.change.ip + '가 ' + cal.getYear() + '년 ' + cal.getMonth() + '월 ' + cal.getDate() + '일 ' + cal.getHour() + '시 ' + cal.getMinute() + '분' + '에 저장한 내용',
+							        newTextName : '현재 내용',
+							        contextSize : '100%',
+							        viewType : 1
 							    })
 							}));
 						}

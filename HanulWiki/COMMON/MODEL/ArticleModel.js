@@ -19,7 +19,10 @@ HanulWiki.ArticleModel = OBJECT({
 				}
 			},
 			content : {
-				notEmpty : true
+				notEmpty : true,
+				size : {
+					max : 100000
+				}
 			},
 			keywords : {
 				notEmpty : true,

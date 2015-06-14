@@ -44,14 +44,9 @@ HanulWiki.MAIN = METHOD({
 			target : HanulWiki.Login
 		});
 		
-		/*HanulWiki.MATCH_VIEW({
-			uri : 'board/login',
-			target : HanulWiki.Login
-		});
-		
 		HanulWiki.MATCH_VIEW({
-			uri : 'board/login',
-			target : HanulWiki.Login
-		});*/
+			uri : 'func/talk',
+			target : HanulWiki.Talk
+		});
 	}
 });

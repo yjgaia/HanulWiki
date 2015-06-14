@@ -9,21 +9,21 @@
 		<title>Wiki</title>
 		<link rel="stylesheet" type="text/css" href="/__CSS">
 		<link rel="stylesheet" type="text/css" href="/R/github-markdown.css">
-		<link rel="stylesheet" type="text/css" href="/R/github-highlight.css">
 		<link rel="stylesheet" type="text/css" href="/R/diffview.css">
 	</head>
 	<body>
 		<script src="/__SCRIPT"></script>
-		<script src="/R/highlight.js"></script>
 		<script src="/R/difflib.js"></script>
 		<script src="/R/diffview.js"></script>
 		<script>
-			// Synchronous highlighting with highlight.js
-			marked.setOptions({
-				highlight : function (code) {
-					return hljs.highlightAuto(code).value;
-				}
-			});
+		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+		
+		  ga('create', 'UA-64096645-1', 'auto');
+		  ga('send', 'pageview');
+		
 		</script>
 	</body>
 </html>
