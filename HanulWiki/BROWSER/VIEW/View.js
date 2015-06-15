@@ -20,7 +20,7 @@ HanulWiki.View = CLASS({
 			
 			var
 			// id
-			id = params.id.trim().replace(/ /g, '').toLowerCase().replace(/@!/g, '/');
+			id = HanulWiki.descapeId(params.id.trim().replace(/ /g, '').toLowerCase());
 			
 			HanulWiki.ArticleModel.view(id, function(articleData) {
 				
@@ -38,7 +38,7 @@ HanulWiki.View = CLASS({
 				change;
 				
 				if (articleData === undefined) {
-					HanulWiki.GO('func/new/' + id.replace(/\//g, '@!'));
+					HanulWiki.GO('func/new/' + HanulWiki.escapeId(id));
 				} else if (inner.checkIsClosed() !== true) {
 					
 					lastUpdateTimeCal = CALENDAR(TIME(articleData.lastUpdateTime === undefined ? articleData.createTime : articleData.lastUpdateTime)),
@@ -70,7 +70,7 @@ HanulWiki.View = CLASS({
 							c : '수정 내역',
 							on : {
 								tap : function() {
-									HanulWiki.GO(articleData.id.replace(/\//g, '@!') + '/history');
+									HanulWiki.GO(HanulWiki.escapeId(articleData.id) + '/history');
 								}
 							}
 						})]
@@ -88,7 +88,7 @@ HanulWiki.View = CLASS({
 								c : '글 수정',
 								on : {
 									tap : function() {
-										HanulWiki.GO('func/update/' + articleData.id.replace(/\//g, '@!'));
+										HanulWiki.GO('func/update/' + HanulWiki.escapeId(articleData.id));
 									}
 								}
 							})]
@@ -104,7 +104,7 @@ HanulWiki.View = CLASS({
 							c : '역링크',
 							on : {
 								tap : function() {
-									HanulWiki.GO(articleData.id.replace(/\//g, '@!') + '/backlinks');
+									HanulWiki.GO(HanulWiki.escapeId(articleData.id) + '/backlinks');
 								}
 							}
 						})]
@@ -206,10 +206,10 @@ HanulWiki.View = CLASS({
 											if (cleanedContent.substring(i, i + keyword.length) === keyword) {
 			
 												textContent = textContent.substring(0, contentIndex + appendCount)
-												+ '<a href="' + keyword.replace(/\//g, '@!') + '" onclick="HanulWiki.GO(\'' + keyword.replace(/\//g, '@!') + '\'); return false;">' + textContent.substring(contentIndex + appendCount, contentIndexSet[i + keyword.length - 1] + appendCount + 1) + '</a>'
+												+ '<a href="' + HanulWiki.escapeId(keyword) + '" onclick="HanulWiki.GO(\'' + HanulWiki.escapeId(keyword) + '\'); return false;">' + textContent.substring(contentIndex + appendCount, contentIndexSet[i + keyword.length - 1] + appendCount + 1) + '</a>'
 												+ textContent.substring(contentIndexSet[i + keyword.length - 1] + appendCount + 1);
 												
-												appendCount += 15 + 42 + keyword.replace(/\//g, '@!').length * 2;
+												appendCount += 15 + 42 + HanulWiki.escapeId(keyword).length * 2;
 												i += keyword.length - 1;
 												
 												return false;

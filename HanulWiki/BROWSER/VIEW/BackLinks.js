@@ -17,7 +17,7 @@ HanulWiki.BackLinks = CLASS({
 			
 			var
 			// id
-			id = params.id.trim().replace(/ /g, '').toLowerCase().replace(/@!/g, '/'),
+			id = HanulWiki.descapeId(params.id.trim().replace(/ /g, '').toLowerCase()),
 			
 			// id dom
 			idDom;
@@ -32,7 +32,7 @@ HanulWiki.BackLinks = CLASS({
 					c : id,
 					on : {
 						tap : function(e) {
-							HanulWiki.GO(id.replace(/\//g, '@!'));
+							HanulWiki.GO(HanulWiki.escapeId(id));
 						}
 					}
 				}), '의 역링크']
@@ -63,7 +63,7 @@ HanulWiki.BackLinks = CLASS({
 							c : keyword,
 							on : {
 								tap : function(e) {
-									HanulWiki.GO(keyword.replace(/\//g, '@!'));
+									HanulWiki.GO(HanulWiki.escapeId(keyword));
 								}
 							}
 						})

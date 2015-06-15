@@ -287,7 +287,7 @@ HanulWiki.Layout = CLASS(function(cls) {
 												c : id,
 												on : {
 													tap : function() {
-														HanulWiki.GO(id.replace(/\//g, '@!'));
+														HanulWiki.GO(HanulWiki.escapeId(id));
 													}
 												}
 											}));
@@ -307,7 +307,7 @@ HanulWiki.Layout = CLASS(function(cls) {
 						}), CLEAR_BOTH()],
 						on : {
 							submit : function(e, form) {
-								HanulWiki.GO(form.getData().id.replace(/\//g, '@!'));
+								HanulWiki.GO(HanulWiki.escapeId(form.getData().id));
 							}
 						}
 					}));
@@ -367,7 +367,7 @@ HanulWiki.Layout = CLASS(function(cls) {
 								HanulWiki.ArticleModel.get({
 									isRandom : true
 								}, function(articleData) {
-									HanulWiki.GO(articleData.id.replace(/\//g, '@!'));
+									HanulWiki.GO(HanulWiki.escapeId(articleData.id));
 								});
 							}
 						}

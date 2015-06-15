@@ -17,7 +17,7 @@ HanulWiki.History = CLASS({
 			
 			var
 			// id
-			id = params.id.trim().replace(/ /g, '').toLowerCase().replace(/@!/g, '/'),
+			id = HanulWiki.descapeId(params.id.trim().replace(/ /g, '').toLowerCase()),
 			
 			// id dom
 			idDom;
@@ -31,7 +31,7 @@ HanulWiki.History = CLASS({
 					c : id,
 					on : {
 						tap : function(e) {
-							HanulWiki.GO(id.replace(/\//g, '@!'));
+							HanulWiki.GO(HanulWiki.escapeId(id));
 						}
 					}
 				}), '의 수정 내역']
@@ -85,7 +85,7 @@ HanulWiki.History = CLASS({
 													id : id,
 													content : history.change.content
 												}, function() {
-													HanulWiki.GO(id.replace(/\//g, '@!'));
+													HanulWiki.GO(HanulWiki.escapeId(id));
 												});
 											}
 										}

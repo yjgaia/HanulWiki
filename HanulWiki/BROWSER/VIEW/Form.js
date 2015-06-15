@@ -60,7 +60,7 @@ HanulWiki.Form = CLASS({
 					next();
 				} else {
 					
-					id = id.replace(/@!/g, '/');
+					id = HanulWiki.descapeId(id);
 					TITLE(CONFIG.title + ' :: 글수정');
 					
 					HanulWiki.ArticleModel.get(id, {
@@ -181,7 +181,7 @@ HanulWiki.Form = CLASS({
 									(articleData === undefined ? HanulWiki.ArticleModel.create : HanulWiki.ArticleModel.update)(data, {
 										notValid : form.showErrors,
 										success : function(savedData) {
-											HanulWiki.GO(savedData.id.replace(/\//g, '@!'));
+											HanulWiki.GO(HanulWiki.escapeId(savedData.id));
 										}
 									});
 								}

@@ -159,7 +159,7 @@ HanulWiki.Home = CLASS({
 							c : articleData.id,
 							on : {
 								tap : function(e) {
-									HanulWiki.GO(articleData.id.replace(/\//g, '@!'));
+									HanulWiki.GO(HanulWiki.escapeId(articleData.id));
 								}
 							}
 						}), SPAN({
@@ -210,7 +210,7 @@ HanulWiki.Home = CLASS({
 							c : articleData.id,
 							on : {
 								tap : function(e) {
-									HanulWiki.GO(articleData.id.replace(/\//g, '@!'));
+									HanulWiki.GO(HanulWiki.escapeId(articleData.id));
 								}
 							}
 						}), SPAN({
@@ -264,7 +264,7 @@ HanulWiki.Home = CLASS({
 							c : articleData.id,
 							on : {
 								tap : function(e) {
-									HanulWiki.GO(articleData.id.replace(/\//g, '@!'));
+									HanulWiki.GO(HanulWiki.escapeId(articleData.id));
 								}
 							}
 						}), SPAN({
@@ -361,10 +361,10 @@ HanulWiki.Home = CLASS({
 										if (cleanedContent.substring(i, i + keyword.length) === keyword) {
 		
 											textContent = textContent.substring(0, contentIndex + appendCount)
-											+ '<a href="' + keyword.replace(/\//g, '@!') + '" onclick="HanulWiki.GO(\'' + keyword.replace(/\//g, '@!') + '\'); return false;">' + textContent.substring(contentIndex + appendCount, contentIndexSet[i + keyword.length - 1] + appendCount + 1) + '</a>'
+											+ '<a href="' + HanulWiki.escapeId(keyword) + '" onclick="HanulWiki.GO(\'' + HanulWiki.escapeId(keyword) + '\'); return false;">' + textContent.substring(contentIndex + appendCount, contentIndexSet[i + keyword.length - 1] + appendCount + 1) + '</a>'
 											+ textContent.substring(contentIndexSet[i + keyword.length - 1] + appendCount + 1);
 											
-											appendCount += 15 + 42 + keyword.replace(/\//g, '@!').length * 2;
+											appendCount += 15 + 42 + HanulWiki.escapeId(keyword).length * 2;
 											i += keyword.length - 1;
 											
 											return false;
