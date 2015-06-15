@@ -220,7 +220,7 @@ HanulWiki.Form = CLASS({
 													style : {
 														color : CONFIG.HanulWiki.baseColor
 													},
-													c : input.getValue() + '로 이동하기',
+													c : input.getValue() + '으로 이동하기',
 													on : {
 														tap : function() {
 															HanulWiki.GO(input.getValue().trim().replace(/ /g, '').toLowerCase());

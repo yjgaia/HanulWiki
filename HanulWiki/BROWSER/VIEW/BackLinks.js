@@ -69,13 +69,18 @@ HanulWiki.BackLinks = CLASS({
 						})
 					}));
 					
+					TITLE(CONFIG.title + ' :: ' + keyword + '의 역링크');
+					
 					GET({
 						host : 'tagengine.btncafe.com',
 						uri : '__REP_TAG',
 						paramStr : 'tag=' + encodeURIComponent(keyword)
 					}, function(id) {
+						
 						articleLink.empty();
 						articleLink.append(id);
+						
+						TITLE(CONFIG.title + ' :: ' + id + '의 역링크');
 					});
 				});
 			});

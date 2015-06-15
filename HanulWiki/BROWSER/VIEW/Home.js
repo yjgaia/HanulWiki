@@ -395,6 +395,8 @@ HanulWiki.Home = CLASS({
 		
 		scrollToSavedTop();
 		
+		TITLE(CONFIG.title);
+		
 		inner.on('close', function() {
 			scrollEvent.remove();
 			wrapper.remove();

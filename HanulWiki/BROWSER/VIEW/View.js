@@ -233,13 +233,18 @@ HanulWiki.View = CLASS({
 						
 						change(content.getEl());
 						
+						TITLE(CONFIG.title + ' :: ' + articleData.id);
+						
 						GET({
 							host : 'tagengine.btncafe.com',
 							uri : '__REP_TAG',
 							paramStr : 'tag=' + encodeURIComponent(articleData.id)
 						}, function(id) {
+							
 							idDom.empty();
 							idDom.append(id);
+							
+							TITLE(CONFIG.title + ' :: ' + id);
 						});
 					}
 				}
