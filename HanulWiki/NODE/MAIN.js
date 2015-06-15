@@ -3,43 +3,45 @@ HanulWiki.MAIN = METHOD({
 	run : function() {
 		'use strict';
 		
-		var
-		// id store
-		idStore;
-		
 		if (CPU_CLUSTERING.getWorkerId() === 1) {
 			
-			idStore = SHARED_STORE('idStore');
-		
-			HanulWiki.ArticleModel.find(function(savedDataSet) {
-				
+			// 하루에 한번씩 실행
+			INTEGER(24 * 60 * 60, RAR(function() {
+			
 				var
-				// ids
-				ids = [];
-				
-				EACH(savedDataSet, function(savedData) {
+				// id store
+				idStore = SHARED_STORE('idStore');
+			
+				HanulWiki.ArticleModel.find(function(savedDataSet) {
 					
 					var
-					// index
-					index = 0;
+					// ids
+					ids = [];
 					
-					EACH(ids, function(id, i) {
+					EACH(savedDataSet, function(savedData) {
 						
-						if (id.length < savedData.id.length) {
-							return false;
-						}
+						var
+						// index
+						index = 0;
 						
-						index = i + 1;
+						EACH(ids, function(id, i) {
+							
+							if (id.length < savedData.id.length) {
+								return false;
+							}
+							
+							index = i + 1;
+						});
+						
+						ids.splice(index, 0, savedData.id);
 					});
 					
-					ids.splice(index, 0, savedData.id);
+					idStore.save({
+						name : 'ids',
+						value : ids
+					});
 				});
-				
-				idStore.save({
-					name : 'ids',
-					value : ids
-				});
-			});
+			}));
 		}
 	}
 });

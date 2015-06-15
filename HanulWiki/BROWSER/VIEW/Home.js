@@ -13,13 +13,22 @@ HanulWiki.Home = CLASS({
 		// scroll store
 		scrollStore = HanulWiki.STORE('scroll'),
 		
+		// is manually scroll
+		isManuallyScroll = false,
+		
 		// scroll event
 		scrollEvent = EVENT('scroll', function() {
-			scrollStore.save({
-				name : 'top',
-				value : SCROLL_TOP(),
-				isToSession : true
-			});
+			
+			if (isManuallyScroll === true) {
+				isManuallyScroll = false;
+			} else {
+			
+				scrollStore.save({
+					name : 'top',
+					value : SCROLL_TOP(),
+					isToSession : true
+				});
+			}
 		}),
 		
 		// browser info
@@ -95,7 +104,15 @@ HanulWiki.Home = CLASS({
 					})]
 				}), CLEAR_BOTH()]
 			})]
-		}).appendTo(HanulWiki.Layout.getContent());
+		}).appendTo(HanulWiki.Layout.getContent()),
+		
+		// scroll to saved top.
+		scrollToSavedTop = function() {
+			if (scrollStore.get('top') !== undefined && scrollStore.get('top') !== SCROLL_TOP()) {
+				isManuallyScroll = true;
+				scrollTo(0, scrollStore.get('top'));
+			}
+		};
 		
 		TITLE(CONFIG.title);
 		
@@ -148,9 +165,7 @@ HanulWiki.Home = CLASS({
 						articleLink.append(id);
 					});
 					
-					if (scrollStore.get('top') !== undefined) {
-						scrollTo(0, scrollStore.get('top'));
-					}
+					scrollToSavedTop();
 				}
 			});
 		});
@@ -201,9 +216,7 @@ HanulWiki.Home = CLASS({
 						articleLink.append(id);
 					});
 					
-					if (scrollStore.get('top') !== undefined) {
-						scrollTo(0, scrollStore.get('top'));
-					}
+					scrollToSavedTop();
 				}
 			});
 		});
@@ -257,9 +270,7 @@ HanulWiki.Home = CLASS({
 						articleLink.append(id);
 					});
 					
-					if (scrollStore.get('top') !== undefined) {
-						scrollTo(0, scrollStore.get('top'));
-					}
+					scrollToSavedTop();
 				}
 			});
 		});
@@ -339,7 +350,7 @@ HanulWiki.Home = CLASS({
 											+ textContent.substring(contentIndexSet[i + keyword.length - 1] + appendCount + 1);
 											
 											appendCount += 15 + 42 + keyword.replace(/\//g, '@!').length * 2;
-											i += keyword.length;
+											i += keyword.length - 1;
 											
 											return false;
 										}
@@ -362,16 +373,12 @@ HanulWiki.Home = CLASS({
 					
 					change(content.getEl());
 					
-					if (scrollStore.get('top') !== undefined) {
-						scrollTo(0, scrollStore.get('top'));
-					}
+					scrollToSavedTop();
 				}
 			});
 		}
 		
-		if (scrollStore.get('top') !== undefined) {
-			scrollTo(0, scrollStore.get('top'));
-		}
+		scrollToSavedTop();
 		
 		inner.on('close', function() {
 			scrollEvent.remove();

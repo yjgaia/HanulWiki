@@ -58,6 +58,24 @@ HanulWiki.View = CLASS({
 						}
 					}));
 					
+					wrapper.append(DIV({
+						style : {
+							flt : 'right',
+							color : CONFIG.HanulWiki.baseColor
+						},
+						c : [A({
+							style : {
+								marginLeft : 5
+							},
+							c : '수정 내역',
+							on : {
+								tap : function() {
+									HanulWiki.GO(articleData.id.replace(/\//g, '@!') + '/history');
+								}
+							}
+						})]
+					}));
+					
 					if (HanulWiki.Layout.checkIsAuthed() === true) {
 						
 						wrapper.append(DIV({
@@ -71,21 +89,6 @@ HanulWiki.View = CLASS({
 								on : {
 									tap : function() {
 										HanulWiki.GO('func/update/' + articleData.id.replace(/\//g, '@!'));
-									}
-								}
-							}), A({
-								style : {
-									marginLeft : 5
-								},
-								c : '글 삭제',
-								on : {
-									tap : function() {
-										
-										if (confirm('정말 삭제하시겠습니까?') === true) {
-											HanulWiki.ArticleModel.remove(articleData.id, function() {
-												HanulWiki.REFRESH('');
-											});
-										}
 									}
 								}
 							})]
@@ -102,16 +105,6 @@ HanulWiki.View = CLASS({
 							on : {
 								tap : function() {
 									HanulWiki.GO(articleData.id.replace(/\//g, '@!') + '/backlinks');
-								}
-							}
-						}), A({
-							style : {
-								marginLeft : 5
-							},
-							c : '수정 내역',
-							on : {
-								tap : function() {
-									HanulWiki.GO(articleData.id.replace(/\//g, '@!') + '/history');
 								}
 							}
 						})]
@@ -217,7 +210,7 @@ HanulWiki.View = CLASS({
 												+ textContent.substring(contentIndexSet[i + keyword.length - 1] + appendCount + 1);
 												
 												appendCount += 15 + 42 + keyword.replace(/\//g, '@!').length * 2;
-												i += keyword.length;
+												i += keyword.length - 1;
 												
 												return false;
 											}

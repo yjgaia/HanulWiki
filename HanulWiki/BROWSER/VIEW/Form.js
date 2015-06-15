@@ -19,6 +19,9 @@ HanulWiki.Form = CLASS({
 		// form
 		form,
 		
+		// existed message
+		existedMessage,
+		
 		// wrapper
 		wrapper = DIV({
 			c : [UUI.BUTTON({
@@ -102,7 +105,11 @@ HanulWiki.Form = CLASS({
 								backgroundColor : '#D83F25',
 								color : '#fff'
 							},
-							c : [UUI.FULL_TEXTAREA({
+							c : [existedMessage = P({
+								style : {
+									fontSize : 12
+								}
+							}), UUI.FULL_TEXTAREA({
 								style : {
 									marginTop : 10,
 									height : 300,
@@ -193,7 +200,43 @@ HanulWiki.Form = CLASS({
 								},
 								placeholder : '이름',
 								name : 'id',
-								value : id
+								value : id,
+								on : {
+									change : function(e, input) {
+										HanulWiki.ArticleModel.checkIsExists({
+											filter : {
+												id : input.getValue().trim().replace(/ /g, '').toLowerCase()
+											}
+										}, function(isExists) {
+											if (isExists === true) {
+												existedMessage.empty();
+												existedMessage.append(SPAN({
+													style : {
+														color : 'red'
+													},
+													c : '이미 존재하는 항목입니다. '
+												}));
+												existedMessage.append(A({
+													style : {
+														color : CONFIG.HanulWiki.baseColor
+													},
+													c : input.getValue() + '로 이동하기',
+													on : {
+														tap : function() {
+															HanulWiki.GO(input.getValue().trim().replace(/ /g, '').toLowerCase());
+														}
+													}
+												}));
+												existedMessage.append(SPAN({
+													style : {
+														color : 'red'
+													},
+													c : ' 이동하시면 작성하신 내용은 사라집니다.'
+												}));
+											}
+										});
+									}
+								}
 							}));
 						}
 			
@@ -256,6 +299,28 @@ HanulWiki.Form = CLASS({
 								}), '에 따라 이용할 수 있음에 동의하는 것으로 간주합니다. 또한 IP 주소가 서버에 저장되고, 문서의 History에 공개되는것을 동의합니다. 이 동의는 철회할 수 없습니다.']
 							}));
 						}
+						
+						form.append(A({
+							style : {
+								marginLeft : 5,
+								flt : 'right',
+								color : '#666',
+								fontSize : 12
+							},
+							c : '글 삭제',
+							on : {
+								tap : function() {
+									
+									if (confirm('정말 삭제하시겠습니까?') === true) {
+										HanulWiki.ArticleModel.remove(articleData.id, function() {
+											HanulWiki.REFRESH('');
+										});
+									}
+								}
+							}
+						}));
+						
+						form.append(CLEAR_BOTH());
 					}
 				};
 			}]);

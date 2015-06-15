@@ -14,7 +14,10 @@ OVERRIDE(HanulWiki.ArticleModel, function(origin) {
 			view,
 			
 			// find history.
-			findHistory;
+			findHistory,
+			
+			// search ids.
+			searchIds;
 			
 			self.view = view = function(id, callback) {
 				self.getRoom().send({
@@ -27,6 +30,13 @@ OVERRIDE(HanulWiki.ArticleModel, function(origin) {
 				self.getRoom().send({
 					methodName : 'findHistory',
 					data : id
+				}, callback);
+			};
+			
+			self.searchIds = searchIds = function(query, callback) {
+				self.getRoom().send({
+					methodName : 'searchIds',
+					data : query
 				}, callback);
 			};
 		}

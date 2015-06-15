@@ -255,6 +255,35 @@ OVERRIDE(HanulWiki.ArticleModel, function(origin) {
 						}, ret);
 					}
 				});
+				
+				on('searchIds', function(query, ret) {
+					
+					if (query !== undefined) {
+					
+						self.find({
+							filter : {
+								id : {
+									$regex : query.trim().replace(/ /g, '').toLowerCase()
+								}
+							},
+							sort : {
+								viewCount : -1
+							},
+							count : 10
+						}, function(articleDataSet) {
+							
+							var
+							// ids
+							ids = [];
+							
+							EACH(articleDataSet, function(articleData) {
+								ids.push(articleData.id);
+							});
+							
+							ret(ids);
+						});
+					}
+				});
 			});
 		}
 	});

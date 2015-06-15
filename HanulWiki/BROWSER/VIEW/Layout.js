@@ -46,6 +46,14 @@ HanulWiki.Layout = CLASS(function(cls) {
 			// auth room
 			authRoom = HanulWiki.ROOM('authRoom'),
 			
+			// tap event
+			tapEvent = EVENT('tap', function() {
+				if (searchResult !== undefined) {
+					searchResult.remove();
+					searchResult = undefined;
+				}
+			}),
+			
 			// menu
 			menu,
 			
@@ -54,6 +62,9 @@ HanulWiki.Layout = CLASS(function(cls) {
 			
 			// footer
 			footer,
+			
+			// search result
+			searchResult,
 			
 			// layout
 			layout = DIV({
@@ -246,7 +257,44 @@ HanulWiki.Layout = CLASS(function(cls) {
 								flt : 'left',
 								width : 100
 							},
-							name : 'id'
+							name : 'id',
+							on : {
+								keyup : function(e, input) {
+									
+									if (searchResult !== undefined) {
+										searchResult.remove();
+									}
+									
+									if (input.getValue().trim() !== '') {
+									
+										searchResult = DIV({
+											style : {
+												position : 'absolute',
+												left : input.getLeft(),
+												top : input.getTop() + input.getHeight(),
+												backgroundColor : '#eee',
+												color : '#000'
+											}
+										}).appendTo(BODY);
+										
+										HanulWiki.ArticleModel.searchIds(input.getValue(), EACH(function(id) {
+											searchResult.append(UUI.BUTTON_H({
+												style : {
+													border : '1px solid #ccc',
+													marginBottom : -1,
+													padding : 5
+												},
+												c : id,
+												on : {
+													tap : function() {
+														HanulWiki.GO(id.replace(/\//g, '@!'));
+													}
+												}
+											}));
+										}));
+									}
+								}
+							}
 						}), UUI.FULL_SUBMIT({
 							style : {
 								margin : '5px 0',
@@ -348,11 +396,29 @@ HanulWiki.Layout = CLASS(function(cls) {
 						HanulWiki.GO('func/login');
 					}
 				});
+				
+				HanulWiki.ArticleModel.get({
+					sort : {
+						createTime : 1
+					}
+				}, function(firstArticleData) {
+					if (inner.checkIsClosed() !== true) {
+						footer.before(DIV({
+							style : {
+								fontSize : 12,
+								color : '#666',
+								padding : 10
+							},
+							c : '첫 글이 작성된지 ' + INTEGER((new Date().getTime() - TIME(firstArticleData.createTime).getTime()) / 24 / 60 / 60 / 1000) + '일이 지났습니다.'
+						}));
+					}
+				});
 			});
 			
 			inner.on('close', function() {
-				scrollEvent.remove();
+				scrollStore.remove();
 				authRoom.exit();
+				tapEvent.remove();
 				layout.remove();
 				content = undefined;
 			});

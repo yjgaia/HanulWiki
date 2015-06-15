@@ -874,7 +874,7 @@ Renderer.prototype.link = function(href, title, text) {
   }
   var out = '<a href="' + href + '"';
   
-  if (href.indexOf('http://') === -1 && href.indexOf('https://') === -1) {
+  if (href.indexOf('http://') !== 0 && href.indexOf('https://') !== 0 && href.indexOf('#') !== 0) {
   	out += ' onclick="HanulWiki.GO(\'' + href + '\'); return false;"';
   }
   

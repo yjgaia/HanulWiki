@@ -24,7 +24,7 @@ HanulWiki.Talk = CLASS({
 			c : [list = UUI.LIST({
 				style : {
 					border : '1px solid #ccc',
-					height : 300,
+					height : 350,
 					overflowY : 'scroll',
 					padding : 5
 				}
@@ -82,8 +82,25 @@ HanulWiki.Talk = CLASS({
 		onNewAndFindRoom = HanulWiki.TalkModel.onNewAndFind({
 			count : 100
 		}, function(talkData) {
-			list.append(P({
-				c : talkData.ip + ': ' + talkData.content
+			
+			var
+			// cal
+			cal = CALENDAR(talkData.createTime);
+			
+			list.append(DIV({
+				c : [P({
+					style : {
+						flt : 'left'
+					},
+					c : talkData.ip + ': ' + talkData.content
+				}), P({
+					style : {
+						flt : 'right',
+						color : '#999',
+						fontSize : 10
+					},
+					c : cal.getYear() + '-' + cal.getMonth(true) + '-' + cal.getDate(true) + ' ' + cal.getHour(true) + ':' + cal.getMinute(true)
+				}), CLEAR_BOTH()]
 			}));
 			
 			list.getContentDom().getEl().scrollTop += 999999;
