@@ -51,7 +51,12 @@ HanulWiki.Home = CLASS({
 						marginRight : 10,
 						marginBottom : 10,
 						flt : 'left',
-						border : '1px solid #ccc'
+						border : '1px solid #ccc',
+						onDisplayResize : function(width, height) {
+							return {
+								width : width >= 1024 ? 300 : '100%'
+							};
+						}
 					},
 					c : [H2({
 						style : {
@@ -70,7 +75,12 @@ HanulWiki.Home = CLASS({
 						marginRight : 10,
 						marginBottom : 10,
 						flt : 'left',
-						border : '1px solid #ccc'
+						border : '1px solid #ccc',
+						onDisplayResize : function(width, height) {
+							return {
+								width : width >= 1024 ? 300 : '100%'
+							};
+						}
 					},
 					c : [H2({
 						style : {
@@ -88,7 +98,12 @@ HanulWiki.Home = CLASS({
 					style : {
 						marginBottom : 10,
 						flt : 'left',
-						border : '1px solid #ccc'
+						border : '1px solid #ccc',
+						onDisplayResize : function(width, height) {
+							return {
+								width : width >= 1024 ? 300 : '100%'
+							};
+						}
 					},
 					c : [H2({
 						style : {
