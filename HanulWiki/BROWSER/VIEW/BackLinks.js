@@ -30,6 +30,7 @@ HanulWiki.BackLinks = CLASS({
 				},
 				c : [idDom = A({
 					c : id,
+					href : HanulWiki.HREF(HanulWiki.escapeId(id)),
 					on : {
 						tap : function(e) {
 							HanulWiki.GO(HanulWiki.escapeId(id));
@@ -61,6 +62,7 @@ HanulWiki.BackLinks = CLASS({
 								color : CONFIG.HanulWiki.baseColor
 							},
 							c : keyword,
+							href : HanulWiki.HREF(HanulWiki.escapeId(keyword)),
 							on : {
 								tap : function(e) {
 									HanulWiki.GO(HanulWiki.escapeId(keyword));

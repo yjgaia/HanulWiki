@@ -54,6 +54,9 @@ HanulWiki.Layout = CLASS(function(cls) {
 				}
 			}),
 			
+			// header
+			header,
+			
 			// menu
 			menu,
 			
@@ -72,25 +75,49 @@ HanulWiki.Layout = CLASS(function(cls) {
 					backgroundColor : '#fff',
 					color : '#000'
 				},
-				c : [menu = DIV({
+				c : [header = UUI.PANEL({
 					style : {
 						backgroundColor : CONFIG.HanulWiki.baseColor,
 						color : '#fff',
 						fontWeight : 'bold'
+					},
+					contentStyle : {
+						margin : 'auto',
+						onDisplayResize : function(width, height) {
+							return {
+								width : width >= 1024 ? 926 : '100%'
+							};
+						}
 					}
 				}),
 				
-				content = DIV({
+				content = UUI.PANEL({
 					style : {
+						margin : 'auto',
+						onDisplayResize : function(width, height) {
+							return {
+								width : width >= 1024 ? 946 : '100%'
+							};
+						}
+					},
+					contentStyle : {
 						padding : 10
 					}
 				}),
 				
-				footer = DIV({
+				footer = UUI.PANEL({
 					style : {
 						borderTop : '1px solid #ccc',
 						backgroundColor : '#eee',
 						padding : '0 10px 10px 10px'
+					},
+					contentStyle : {
+						margin : 'auto',
+						onDisplayResize : function(width, height) {
+							return {
+								width : width >= 1024 ? 926 : '100%'
+							};
+						}
 					}
 				})]
 			}).appendTo(BODY);
@@ -216,7 +243,7 @@ HanulWiki.Layout = CLASS(function(cls) {
 					
 					if (CONFIG.HanulWiki.logo !== undefined) {
 					
-						menu.append(IMG({
+						header.append(IMG({
 							style : {
 								flt : 'left',
 								cursor : 'pointer'
@@ -231,7 +258,7 @@ HanulWiki.Layout = CLASS(function(cls) {
 						}));
 					}
 					
-					menu.append(H1({
+					header.append(H1({
 						style : {
 							flt : 'left',
 							padding : 10,
@@ -247,7 +274,7 @@ HanulWiki.Layout = CLASS(function(cls) {
 						}
 					}));
 				
-					menu.append(FORM({
+					header.append(FORM({
 						style : {
 							flt : 'left'
 						},
@@ -312,6 +339,12 @@ HanulWiki.Layout = CLASS(function(cls) {
 						}
 					}));
 					
+					header.append(menu = DIV({
+						style : {
+							flt : 'left'
+						}
+					}));
+					
 					menu.append(UUI.BUTTON_H({
 						style : {
 							marginLeft : 10,
@@ -319,6 +352,7 @@ HanulWiki.Layout = CLASS(function(cls) {
 							padding : 10
 						},
 						title : '처음으로',
+						href : HanulWiki.HREF(''),
 						on : {
 							tap : function() {
 								scrollStore.remove('top');
@@ -348,6 +382,7 @@ HanulWiki.Layout = CLASS(function(cls) {
 								padding : 10
 							},
 							title : '토론',
+							href : HanulWiki.HREF('func/talk'),
 							on : {
 								tap : function() {
 									HanulWiki.GO('func/talk');
@@ -373,7 +408,9 @@ HanulWiki.Layout = CLASS(function(cls) {
 						}
 					}));
 					
-					menu.append(countDom = DIV({
+					menu.append(CLEAR_BOTH());
+					
+					header.append(countDom = DIV({
 						style : {
 							flt : 'right',
 							padding : 10
@@ -388,7 +425,7 @@ HanulWiki.Layout = CLASS(function(cls) {
 						}
 					});
 					
-					menu.append(CLEAR_BOTH());
+					header.append(CLEAR_BOTH());
 				}
 			
 				inner.on('uriChange', function(uri) {
@@ -403,8 +440,16 @@ HanulWiki.Layout = CLASS(function(cls) {
 					}
 				}, function(firstArticleData) {
 					if (inner.checkIsClosed() !== true) {
-						footer.before(DIV({
+						footer.before(UUI.PANEL({
 							style : {
+								margin : 'auto',
+								onDisplayResize : function(width, height) {
+									return {
+										width : width >= 1024 ? 946 : '100%'
+									};
+								}
+							},
+							contentStyle : {
 								fontSize : 12,
 								color : '#666',
 								padding : 10

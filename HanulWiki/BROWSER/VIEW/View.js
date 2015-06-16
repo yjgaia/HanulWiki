@@ -68,6 +68,7 @@ HanulWiki.View = CLASS({
 								marginLeft : 5
 							},
 							c : '수정 내역',
+							href : HanulWiki.HREF(HanulWiki.escapeId(articleData.id) + '/history'),
 							on : {
 								tap : function() {
 									HanulWiki.GO(HanulWiki.escapeId(articleData.id) + '/history');
@@ -102,6 +103,7 @@ HanulWiki.View = CLASS({
 						},
 						c : [A({
 							c : '역링크',
+							href : HanulWiki.HREF(HanulWiki.escapeId(articleData.id) + '/backlinks'),
 							on : {
 								tap : function() {
 									HanulWiki.GO(HanulWiki.escapeId(articleData.id) + '/backlinks');

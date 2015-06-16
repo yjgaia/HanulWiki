@@ -46,79 +46,89 @@ HanulWiki.Home = CLASS({
 		// wrapper
 		wrapper = DIV({
 			c : [DIV({
-				c : [DIV({
+				style : {
+					marginRight : 10,
+					marginBottom : 10,
+					flt : 'left',
+					border : '1px solid #ccc',
+					onDisplayResize : function(width, height) {
+						return {
+							width : width >= 1024 ? 300 : '100%'
+						};
+					}
+				},
+				c : [H2({
 					style : {
-						marginRight : 10,
-						marginBottom : 10,
-						flt : 'left',
-						border : '1px solid #ccc',
-						onDisplayResize : function(width, height) {
-							return {
-								width : width >= 1024 ? 300 : '100%'
-							};
-						}
+						backgroundColor : CONFIG.HanulWiki.baseColor,
+						color : '#fff',
+						fontWeight : 'bold',
+						padding : 10,
+						fontSize : 16,
+						textAlign : 'center'
 					},
-					c : [H2({
-						style : {
-							backgroundColor : CONFIG.HanulWiki.baseColor,
-							color : '#fff',
-							fontWeight : 'bold',
-							padding : 5,
-							textAlign : 'center'
-						},
-						c : '인기글'
-					}), popularList = DIV({
-						c : '로딩중...'
-					})]
-				}), DIV({
+					c : '인기글'
+				}), popularList = DIV({
 					style : {
-						marginRight : 10,
-						marginBottom : 10,
-						flt : 'left',
-						border : '1px solid #ccc',
-						onDisplayResize : function(width, height) {
-							return {
-								width : width >= 1024 ? 300 : '100%'
-							};
-						}
+						padding : 5
 					},
-					c : [H2({
-						style : {
-							backgroundColor : CONFIG.HanulWiki.baseColor,
-							color : '#fff',
-							fontWeight : 'bold',
-							padding : 5,
-							textAlign : 'center'
-						},
-						c : '최신글'
-					}), recentList = DIV({
-						c : '로딩중...'
-					})]
-				}), DIV({
+					c : '로딩중...'
+				})]
+			}), DIV({
+				style : {
+					marginRight : 10,
+					marginBottom : 10,
+					flt : 'left',
+					border : '1px solid #ccc',
+					onDisplayResize : function(width, height) {
+						return {
+							width : width >= 1024 ? 300 : '100%'
+						};
+					}
+				},
+				c : [H2({
 					style : {
-						marginBottom : 10,
-						flt : 'left',
-						border : '1px solid #ccc',
-						onDisplayResize : function(width, height) {
-							return {
-								width : width >= 1024 ? 300 : '100%'
-							};
-						}
+						backgroundColor : CONFIG.HanulWiki.baseColor,
+						color : '#fff',
+						fontWeight : 'bold',
+						padding : 10,
+						fontSize : 16,
+						textAlign : 'center'
 					},
-					c : [H2({
-						style : {
-							backgroundColor : CONFIG.HanulWiki.baseColor,
-							color : '#fff',
-							fontWeight : 'bold',
-							padding : 5,
-							textAlign : 'center'
-						},
-						c : '최근 수정글'
-					}), recentUpdateList = DIV({
-						c : '로딩중...'
-					})]
-				}), CLEAR_BOTH()]
-			})]
+					c : '최신글'
+				}), recentList = DIV({
+					style : {
+						padding : 5
+					},
+					c : '로딩중...'
+				})]
+			}), DIV({
+				style : {
+					marginBottom : 10,
+					flt : 'left',
+					border : '1px solid #ccc',
+					onDisplayResize : function(width, height) {
+						return {
+							width : width >= 1024 ? 300 : '100%'
+						};
+					}
+				},
+				c : [H2({
+					style : {
+						backgroundColor : CONFIG.HanulWiki.baseColor,
+						color : '#fff',
+						fontWeight : 'bold',
+						padding : 10,
+						fontSize : 16,
+						textAlign : 'center'
+					},
+					c : '최근 수정글'
+				}), recentUpdateList = DIV({
+					style : {
+						padding : 5
+					},
+					c : '로딩중...'
+				})]
+			}), CLEAR_BOTH()]
 		}).appendTo(HanulWiki.Layout.getContent()),
 		
 		// scroll to saved top.
@@ -157,6 +167,7 @@ HanulWiki.Home = CLASS({
 								color : CONFIG.HanulWiki.baseColor
 							},
 							c : articleData.id,
+							href : HanulWiki.HREF(HanulWiki.escapeId(articleData.id)),
 							on : {
 								tap : function(e) {
 									HanulWiki.GO(HanulWiki.escapeId(articleData.id));
@@ -208,6 +219,7 @@ HanulWiki.Home = CLASS({
 								color : CONFIG.HanulWiki.baseColor
 							},
 							c : articleData.id,
+							href : HanulWiki.HREF(HanulWiki.escapeId(articleData.id)),
 							on : {
 								tap : function(e) {
 									HanulWiki.GO(HanulWiki.escapeId(articleData.id));
@@ -262,6 +274,7 @@ HanulWiki.Home = CLASS({
 								color : CONFIG.HanulWiki.baseColor
 							},
 							c : articleData.id,
+							href : HanulWiki.HREF(HanulWiki.escapeId(articleData.id)),
 							on : {
 								tap : function(e) {
 									HanulWiki.GO(HanulWiki.escapeId(articleData.id));
@@ -303,8 +316,10 @@ HanulWiki.Home = CLASS({
 				
 				wrapper.prepend(content = DIV({
 					style : {
+						border : '1px solid #ccc',
+						padding : 10,
 						fontSize : 14,
-						marginBottom : 10
+						margin : '10px 0 20px 0'
 					}
 				}));
 				

@@ -29,6 +29,7 @@ HanulWiki.History = CLASS({
 				},
 				c : [idDom = A({
 					c : id,
+					href : HanulWiki.HREF(HanulWiki.escapeId(id)),
 					on : {
 						tap : function(e) {
 							HanulWiki.GO(HanulWiki.escapeId(id));

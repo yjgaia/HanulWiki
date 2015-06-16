@@ -44,7 +44,7 @@ HanulWiki.Talk = CLASS({
 						flt : 'left',
 						onDisplayResize : function(width, height) {
 							return {
-								width : width - 133
+								width : width >= 1024 ? 966 - 133 : width - 133
 							};
 						}
 					},
