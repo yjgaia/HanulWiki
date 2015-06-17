@@ -15,41 +15,6 @@ OVERRIDE(HanulWiki.ArticleModel, function(origin) {
 			
 			// history db
 			historyDB = HanulWiki.DB('Article__HISTORY');
-			
-			if (CPU_CLUSTERING.getWorkerId() === 1) {
-			
-				self.find({
-					isFindAll : true
-				}, function(articleDataSet) {
-					
-					var
-					// ids
-					ids = [];
-					
-					EACH(articleDataSet, function(articleData) {
-						
-						var
-						// index
-						index = 0;
-						
-						EACH(ids, function(id, i) {
-							
-							if (id.length < articleData.id.length) {
-								return false;
-							}
-							
-							index = i + 1;
-						});
-						
-						ids.splice(index, 0, articleData.id);
-					});
-					
-					idStore.save({
-						name : 'ids',
-						value : ids
-					});
-				});
-			}
 
 			inner.on('create', {
 			
@@ -269,7 +234,7 @@ OVERRIDE(HanulWiki.ArticleModel, function(origin) {
 							sort : {
 								viewCount : -1
 							},
-							count : 10
+							count : 20
 						}, function(articleDataSet) {
 							
 							var

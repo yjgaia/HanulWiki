@@ -128,7 +128,7 @@ HanulWiki.Layout = CLASS(function(cls) {
 					c : [A({
 						href : 'http://creativecommons.org/licenses/by/4.0/',
 						c : IMG({
-							src : 'https://i.creativecommons.org/l/by/4.0/88x31.png'
+							src : HanulWiki.R('ccl-by.png')
 						})
 					}), BR(), '이 저작물은 ', A({
 						href : 'http://creativecommons.org/licenses/by/4.0/',
@@ -143,7 +143,7 @@ HanulWiki.Layout = CLASS(function(cls) {
 					c : [A({
 						href : 'http://creativecommons.org/licenses/by-sa/4.0/',
 						c : IMG({
-							src : 'https://i.creativecommons.org/l/by-sa/4.0/88x31.png'
+							src : HanulWiki.R('ccl-by-sa.png')
 						})
 					}), BR(), '이 저작물은 ', A({
 						href : 'http://creativecommons.org/licenses/by-sa/4.0/',
@@ -158,7 +158,7 @@ HanulWiki.Layout = CLASS(function(cls) {
 					c : [A({
 						href : 'http://creativecommons.org/licenses/by-nd/4.0/',
 						c : IMG({
-							src : 'https://i.creativecommons.org/l/by-nd/4.0/88x31.png'
+							src : HanulWiki.R('ccl-by-nd.png')
 						})
 					}), BR(), '이 저작물은 ', A({
 						href : 'http://creativecommons.org/licenses/by-nd/4.0/',
@@ -173,7 +173,7 @@ HanulWiki.Layout = CLASS(function(cls) {
 					c : [A({
 						href : 'http://creativecommons.org/licenses/by-nc/4.0/',
 						c : IMG({
-							src : 'https://i.creativecommons.org/l/by-nc/4.0/88x31.png'
+							src : HanulWiki.R('ccl-by-nc.png')
 						})
 					}), BR(), '이 저작물은 ', A({
 						href : 'http://creativecommons.org/licenses/by-nc/4.0/',
@@ -188,7 +188,7 @@ HanulWiki.Layout = CLASS(function(cls) {
 					c : [A({
 						href : 'http://creativecommons.org/licenses/by-nc-sa/4.0/',
 						c : IMG({
-							src : 'https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png'
+							src : HanulWiki.R('ccl-by-nc-sa.png')
 						})
 					}), BR(), '이 저작물은 ', A({
 						href : 'http://creativecommons.org/licenses/by-nc-sa/4.0/',
@@ -203,7 +203,7 @@ HanulWiki.Layout = CLASS(function(cls) {
 					c : [A({
 						href : 'http://creativecommons.org/licenses/by-nc-nd/4.0/',
 						c : IMG({
-							src : 'https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png'
+							src : HanulWiki.R('ccl-by-nc-nd.png')
 						})
 					}), BR(), '이 저작물은 ', A({
 						href : 'http://creativecommons.org/licenses/by-nc-nd/4.0/',
@@ -282,43 +282,154 @@ HanulWiki.Layout = CLASS(function(cls) {
 							style : {
 								margin : '5px 0',
 								flt : 'left',
-								width : 100
+								width : 120
 							},
 							name : 'id',
 							on : {
 								keyup : function(e, input) {
 									
-									if (searchResult !== undefined) {
-										searchResult.remove();
-									}
+									var
+									// key code
+									keyCode = e.getKeyCode(),
 									
-									if (input.getValue().trim() !== '') {
+									// now id
+									nowId,
 									
-										searchResult = DIV({
-											style : {
-												position : 'absolute',
-												left : input.getLeft(),
-												top : input.getTop() + input.getHeight(),
-												backgroundColor : '#eee',
-												color : '#000'
-											}
-										}).appendTo(BODY);
+									// now id dom
+									nowIdDom,
+									
+									// keydown event
+									keydownEvent;
+									
+									if (keyCode === 27) {
 										
-										HanulWiki.ArticleModel.searchIds(input.getValue(), EACH(function(id) {
-											searchResult.append(UUI.BUTTON_H({
-												style : {
-													border : '1px solid #ccc',
-													marginBottom : -1,
-													padding : 5
-												},
-												c : id,
-												on : {
-													tap : function() {
-														HanulWiki.GO(HanulWiki.escapeId(id));
+										if (searchResult !== undefined) {
+											searchResult.remove();
+										}
+										
+									} else if (keyCode !== 40 && keyCode !== 38) {
+										
+										if (searchResult !== undefined) {
+											searchResult.remove();
+										}
+										
+										if (input.getValue().trim() !== '') {
+										
+											keydownEvent = EVENT('keydown', function(e) {
+												
+												var
+												// key code
+												keyCode = e.getKeyCode(),
+												
+												// i
+												i;
+												
+												if (searchResult.getChildren().length > 0) {
+													
+													if (keyCode === 40) {
+														
+														if (nowIdDom === undefined) {
+															nowIdDom = searchResult.getChildren()[0];
+														} else {
+															nowIdDom.addStyle({
+																backgroundColor : '#eee'
+															});
+															
+															i = FIND({
+																array : searchResult.getChildren(),
+																value : nowIdDom
+															}) + 1;
+															
+															if (i >= searchResult.getChildren().length) {
+																nowIdDom = undefined;
+															} else {
+																nowIdDom = searchResult.getChildren()[i];
+															}
+														}
+														
+														if (nowIdDom !== undefined) {
+															nowIdDom.addStyle({
+																backgroundColor : '#ccc'
+															});
+														}
+														
+													} else if (keyCode === 38) {
+														
+														if (nowIdDom === undefined) {
+															nowIdDom = searchResult.getChildren()[searchResult.getChildren().length - 1];
+														} else {
+															nowIdDom.addStyle({
+																backgroundColor : '#eee'
+															});
+															
+															i = FIND({
+																array : searchResult.getChildren(),
+																value : nowIdDom
+															}) - 1;
+															
+															if (i < 0) {
+																nowIdDom = undefined;
+															} else {
+																nowIdDom = searchResult.getChildren()[i];
+															}
+														}
+														
+														if (nowIdDom !== undefined) {
+															nowIdDom.addStyle({
+																backgroundColor : '#ccc'
+															});
+														}
+														
+													} else if (keyCode === 13 && nowIdDom !== undefined) {
+														input.setValue('');
+														HanulWiki.GO(HanulWiki.escapeId(nowIdDom.getData().id));
 													}
 												}
+											});
+										
+											searchResult = DIV({
+												style : {
+													position : 'absolute',
+													left : input.getLeft(),
+													top : input.getTop() + input.getHeight(),
+													backgroundColor : '#eee',
+													color : '#000'
+												},
+												on : {
+													remove : function() {
+														keydownEvent.remove();
+													}
+												}
+											}).appendTo(BODY);
+											
+											HanulWiki.ArticleModel.searchIds(input.getValue(), EACH(function(id) {
+												
+												var
+												// button
+												button;
+												
+												if (searchResult !== undefined) {
+												
+													searchResult.append(button = UUI.BUTTON_H({
+														style : {
+															border : '1px solid #ccc',
+															marginBottom : -1,
+															padding : 5
+														},
+														c : id,
+														on : {
+															tap : function() {
+																HanulWiki.GO(HanulWiki.escapeId(id));
+															}
+														}
+													}));
+													
+													button.setData({
+														id : id
+													});
+												}
 											}));
-										}));
+										}
 									}
 								}
 							}
@@ -334,7 +445,15 @@ HanulWiki.Layout = CLASS(function(cls) {
 						}), CLEAR_BOTH()],
 						on : {
 							submit : function(e, form) {
-								HanulWiki.GO(HanulWiki.escapeId(form.getData().id));
+								
+								var
+								// id
+								id = form.getData().id.trim();
+								
+								if (id !== '') {
+									HanulWiki.GO(HanulWiki.escapeId(id));
+									form.setData({});
+								}
 							}
 						}
 					}));

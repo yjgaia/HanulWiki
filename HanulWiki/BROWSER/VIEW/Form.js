@@ -189,6 +189,14 @@ HanulWiki.Form = CLASS({
 						}));
 						
 						if (articleData !== undefined) {
+							
+							form.prepend(H1({
+								style : {
+									fontSize : 20,
+									fontWeight : 'bold'
+								},
+								c : articleData.id + ' 수정'
+							}));
 						
 							form.setData(articleData);
 						
@@ -208,8 +216,10 @@ HanulWiki.Form = CLASS({
 												id : input.getValue().trim().replace(/ /g, '').toLowerCase()
 											}
 										}, function(isExists) {
+											
+											existedMessage.empty();
+											
 											if (isExists === true) {
-												existedMessage.empty();
 												existedMessage.append(SPAN({
 													style : {
 														color : 'red'
@@ -300,25 +310,28 @@ HanulWiki.Form = CLASS({
 							}));
 						}
 						
-						form.append(A({
-							style : {
-								marginLeft : 5,
-								flt : 'right',
-								color : '#666',
-								fontSize : 12
-							},
-							c : '글 삭제',
-							on : {
-								tap : function() {
-									
-									if (confirm('정말 삭제하시겠습니까?') === true) {
-										HanulWiki.ArticleModel.remove(articleData.id, function() {
-											HanulWiki.REFRESH('');
-										});
+						if (CONFIG.HanulWiki.isCannotRemove !== true) {
+							
+							form.append(A({
+								style : {
+									marginLeft : 5,
+									flt : 'right',
+									color : '#666',
+									fontSize : 12
+								},
+								c : '글 삭제',
+								on : {
+									tap : function() {
+										
+										if (confirm('정말 삭제하시겠습니까?') === true) {
+											HanulWiki.ArticleModel.remove(articleData.id, function() {
+												HanulWiki.REFRESH('');
+											});
+										}
 									}
 								}
-							}
-						}));
+							}));
+						}
 						
 						form.append(CLEAR_BOTH());
 					}

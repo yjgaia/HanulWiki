@@ -38,7 +38,7 @@ HanulWiki.View = CLASS({
 				change;
 				
 				if (articleData === undefined) {
-					HanulWiki.GO('func/new/' + HanulWiki.escapeId(id));
+					HanulWiki.GO('func/new/' + params.id);
 				} else if (inner.checkIsClosed() !== true) {
 					
 					lastUpdateTimeCal = CALENDAR(TIME(articleData.lastUpdateTime === undefined ? articleData.createTime : articleData.lastUpdateTime)),
