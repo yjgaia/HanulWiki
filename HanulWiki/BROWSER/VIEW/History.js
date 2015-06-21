@@ -19,8 +19,16 @@ HanulWiki.History = CLASS({
 			// id
 			id = HanulWiki.descapeId(params.id.trim().replace(/ /g, '').toLowerCase()),
 			
+			// page
+			page = params.page,
+			
 			// id dom
-			idDom;
+			idDom,
+			
+			// list
+			list;
+			
+			wrapper.empty();
 			
 			wrapper.append(H1({
 				style : {
@@ -36,6 +44,26 @@ HanulWiki.History = CLASS({
 						}
 					}
 				}), '의 수정 내역']
+			}));
+			
+			wrapper.append(list = DIV());
+			
+			wrapper.append(DIV({
+				style : {
+					marginTop : 10,
+					textAlign : 'right'
+				},
+				c : A({
+					style : {
+						color : CONFIG.HanulWiki.baseColor
+					},
+					c : '다음',
+					on : {
+						tap : function() {
+							HanulWiki.GO(HanulWiki.escapeId(id) + '/history/' + (page === undefined ? 2 : page + 1));
+						}
+					}
+				})
 			}));
 			
 			TITLE(CONFIG.title + ' :: ' + id + '의 수정 내역');
@@ -58,7 +86,10 @@ HanulWiki.History = CLASS({
 				// now article string
 				nowArticleString = difflib.stringAsLines(nowArticleData.content);
 				
-				HanulWiki.ArticleModel.findHistory(id, function(histories) {
+				HanulWiki.ArticleModel.findHistory({
+					id : id,
+					page : page
+				}, function(histories) {
 					
 					EACH(histories, function(history) {
 						
@@ -75,7 +106,7 @@ HanulWiki.History = CLASS({
 						
 							cal = CALENDAR(TIME(history.time));
 							
-							wrapper.append(DIV({
+							list.append(DIV({
 								style : {
 									marginTop : 15
 								},

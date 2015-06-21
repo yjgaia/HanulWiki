@@ -34,6 +34,9 @@ HanulWiki.Home = CLASS({
 		// browser info
 		browserInfo = INFO.getBrowserInfo(),
 		
+		// article room
+		articleRoom = HanulWiki.ROOM('Article'),
+		
 		// popular list
 		popularList,
 		
@@ -196,13 +199,19 @@ HanulWiki.Home = CLASS({
 			});
 		});
 		
-		HanulWiki.ArticleModel.find({
+		HanulWiki.ArticleModel.onNewAndFind({
 			count : 20
-		}, function(articleDataSet) {
+		}, {
+			success : function() {
+				if (inner.checkIsClosed() !== true) {
+					recentList.empty();
 					
-			recentList.empty();
-			
-			EACH(articleDataSet, function(articleData) {
+					DELAY(function() {
+						scrollToSavedTop();
+					});
+				}
+			},
+			handler : function(articleData) {
 				
 				var
 				// article link
@@ -210,8 +219,12 @@ HanulWiki.Home = CLASS({
 				
 				if (inner.checkIsClosed() !== true) {
 					
-					recentList.append(DIV({
-						style : {
+					if (recentList.getChildren().length === 20) {
+						recentList.getChildren()[19].remove();
+					}
+					
+					recentList.prepend(DIV({
+						style : { 
 							padding : 5
 						},
 						c : [articleLink = A({
@@ -242,10 +255,8 @@ HanulWiki.Home = CLASS({
 						articleLink.empty();
 						articleLink.append(id);
 					});
-					
-					scrollToSavedTop();
 				}
-			});
+			}
 		});
 		
 		HanulWiki.ArticleModel.find({
@@ -254,53 +265,75 @@ HanulWiki.Home = CLASS({
 				lastUpdateTime : -1
 			}
 		}, function(articleDataSet) {
+			
+			var
+			// create article dom.
+			createArticleDom = function(articleData) {
+				
+				var
+				// article link
+				articleLink,
+				
+				// article dom
+				articleDom = DIV({
+					style : {
+						padding : 5
+					},
+					c : [articleLink = A({
+						style : {
+							color : CONFIG.HanulWiki.baseColor
+						},
+						c : articleData.id,
+						href : HanulWiki.HREF(HanulWiki.escapeId(articleData.id)),
+						on : {
+							tap : function(e) {
+								HanulWiki.GO(HanulWiki.escapeId(articleData.id));
+							}
+						}
+					}), SPAN({
+						style : {
+							marginLeft : 5,
+							fontSize : 10
+						},
+						c : '(' + articleData.viewCount + ')'
+					})]
+				});
+				
+				GET({
+					host : 'tagengine.btncafe.com',
+					uri : '__REP_TAG',
+					paramStr : 'tag=' + encodeURIComponent(articleData.id)
+				}, function(id) {
+					articleLink.empty();
+					articleLink.append(id);
+				});
+				
+				return articleDom;
+			};
 					
 			recentUpdateList.empty();
 			
 			EACH(articleDataSet, function(articleData) {
 				
-				var
-				// article link
-				articleLink;
-				
 				if (inner.checkIsClosed() !== true) {
 					
-					recentUpdateList.append(DIV({
-						style : {
-							padding : 5
-						},
-						c : [articleLink = A({
-							style : {
-								color : CONFIG.HanulWiki.baseColor
-							},
-							c : articleData.id,
-							href : HanulWiki.HREF(HanulWiki.escapeId(articleData.id)),
-							on : {
-								tap : function(e) {
-									HanulWiki.GO(HanulWiki.escapeId(articleData.id));
-								}
-							}
-						}), SPAN({
-							style : {
-								marginLeft : 5,
-								fontSize : 10
-							},
-							c : '(' + articleData.viewCount + ')'
-						})]
-					}));
-					
-					GET({
-						host : 'tagengine.btncafe.com',
-						uri : '__REP_TAG',
-						paramStr : 'tag=' + encodeURIComponent(articleData.id)
-					}, function(id) {
-						articleLink.empty();
-						articleLink.append(id);
-					});
+					recentUpdateList.append(createArticleDom(articleData));
 					
 					scrollToSavedTop();
 				}
 			});
+			
+			if (articleRoom !== undefined) {
+			
+				articleRoom.on('recentUpdate', function(recentUpdateArticleData) {
+					
+					if (recentUpdateList.getChildren().length === 20) {
+						recentUpdateList.getChildren()[19].remove();
+					}
+					
+					recentUpdateList.prepend(createArticleDom(recentUpdateArticleData));
+				});
+			}
 		});
 		
 		if (CONFIG.HanulWiki.mainDocument !== undefined) {
@@ -415,6 +448,8 @@ HanulWiki.Home = CLASS({
 		inner.on('close', function() {
 			scrollEvent.remove();
 			wrapper.remove();
+			articleRoom.exit();
+			articleRoom = undefined;
 		});
 	}
 });

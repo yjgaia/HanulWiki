@@ -49,14 +49,14 @@ HanulWiki.ArticleModel = OBJECT({
 			methodConfig : {
 				create : {
 					valid : VALID(validDataSet),
-					role : 'ADMIN'
+					role : 'USER'
 				},
 				update : {
 					valid : VALID(validDataSet),
-					role : 'ADMIN'
+					role : 'USER'
 				},
 				remove : CONFIG.HanulWiki.isCannotRemove === true ? false : {
-					role : 'ADMIN'
+					role : 'USER'
 				}
 			}
 		};

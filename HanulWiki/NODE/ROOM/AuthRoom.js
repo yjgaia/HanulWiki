@@ -12,7 +12,12 @@ HanulWiki.AuthRoom = OBJECT({
 				isAuthed = (CONFIG.HanulWiki !== undefined && CONFIG.HanulWiki.isPublic === true) || (NODE_CONFIG.HanulWiki !== undefined && password === NODE_CONFIG.HanulWiki.password);
 				
 				if (isAuthed === true) {
-					clientInfo.roles = ['ADMIN'];
+					clientInfo.roles = ['USER'];
+				}
+				
+				// 운영자 로그인
+				if (NODE_CONFIG.HanulWiki !== undefined && NODE_CONFIG.HanulWiki.adminPassword !== undefined && password === NODE_CONFIG.HanulWiki.adminPassword) {
+					clientInfo.roles = ['USER', 'ADMIN'];
 				}
 				
 				ret(isAuthed);

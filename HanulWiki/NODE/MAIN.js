@@ -4,13 +4,12 @@ HanulWiki.MAIN = METHOD({
 		'use strict';
 		
 		var
-		// id store
-		idStore;
+		// id db
+		idDB;
 		
 		if (CPU_CLUSTERING.getWorkerId() === 1) {
 			
-			// id store
-			idStore = SHARED_STORE('idStore');
+			idDB = SHARED_DB('idDB');
 			
 			// 하루에 한번씩 실행
 			INTEGER(24 * 60 * 60, RAR(function() {
@@ -41,9 +40,11 @@ HanulWiki.MAIN = METHOD({
 						ids.splice(index, 0, articleData.id);
 					});
 					
-					idStore.save({
-						name : 'ids',
-						value : ids
+					idDB.save({
+						id : 'ids',
+						data : {
+							ids : ids
+						}
 					});
 					
 					EACH(articleDataSet, function(articleData) {
@@ -59,13 +60,18 @@ HanulWiki.MAIN = METHOD({
 							
 							var
 							// removed content
-							removedContent = cleanedContent.replace(new RegExp(id.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g'), '');
+							removedContent;
 							
-							if (removedContent.length < cleanedContent.length) {
-								keywords.push(id);
+							if (articleData.id !== id) {
+							
+								removedContent = cleanedContent.replace(new RegExp(id.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g'), '');
+								
+								if (removedContent.length < cleanedContent.length) {
+									keywords.push(id);
+								}
+								
+								cleanedContent = removedContent;
 							}
-							
-							cleanedContent = removedContent;
 						});
 						
 						if (CHECK_ARE_SAME([articleData.keywords, keywords]) !== true) {

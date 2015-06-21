@@ -179,7 +179,14 @@ HanulWiki.Form = CLASS({
 									}
 									
 									(articleData === undefined ? HanulWiki.ArticleModel.create : HanulWiki.ArticleModel.update)(data, {
-										notValid : form.showErrors,
+										notValid : function(validErrors) {
+											
+											if (validErrors.ban === true) {
+												alert('차단된 IP 입니다. 모바일일 경우, 해당 통신사를 쓰는 다른 누구가로 인해 차단된 것일 수 있습니다.');
+											}
+											
+											form.showErrors(validErrors);
+										},
 										success : function(savedData) {
 											HanulWiki.GO(HanulWiki.escapeId(savedData.id));
 										}
@@ -324,8 +331,13 @@ HanulWiki.Form = CLASS({
 									tap : function() {
 										
 										if (confirm('정말 삭제하시겠습니까?') === true) {
-											HanulWiki.ArticleModel.remove(articleData.id, function() {
-												HanulWiki.REFRESH('');
+											HanulWiki.ArticleModel.remove(articleData.id, {
+												notAuthed : function(validErrors) {
+													alert('인증되지 않은 사용자입니다.');
+												},
+												success : function() {
+													HanulWiki.REFRESH('');
+												}
 											});
 										}
 									}

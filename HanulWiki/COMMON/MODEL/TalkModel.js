@@ -17,15 +17,22 @@ HanulWiki.TalkModel = OBJECT({
 				size : {
 					max : 3000
 				}
+			},
+			keywords : {
+				notEmpty : true,
+				array : true
 			}
 		};
 
 		return {
 			name : 'Talk',
+			initData : {
+				keywords : []
+			},
 			methodConfig : {
 				create : {
 					valid : VALID(validDataSet),
-					role : 'ADMIN'
+					role : 'USER'
 				},
 				update : false,
 				remove : false

@@ -68,9 +68,17 @@ HanulWiki.Talk = CLASS({
 						if (content.trim() === '') {
 							alert('메시지를 입력해주세요.');
 						} else {
+							
 							HanulWiki.TalkModel.create({
 								content : content
+							}, {
+								notValid : function(validErrors) {
+									if (validErrors.ban === true) {
+										alert('차단된 IP 입니다. 모바일일 경우, 해당 통신사를 쓰는 다른 누구가로 인해 차단된 것일 수 있습니다.');
+									}
+								}
 							});
+							
 							form.setData({});
 							contentInput.focus();
 						}
@@ -85,14 +93,29 @@ HanulWiki.Talk = CLASS({
 			
 			var
 			// cal
-			cal = CALENDAR(talkData.createTime);
+			cal = CALENDAR(talkData.createTime),
+			
+			// content
+			content = talkData.content,
+			
+			// regex result
+			regexResult,
+			
+			// found url
+			foundURL,
+			
+			// content dom
+			contentDom,
+			
+			// change.
+			change;
 			
 			list.append(DIV({
-				c : [P({
+				c : [contentDom = P({
 					style : {
 						flt : 'left'
 					},
-					c : talkData.ip + ': ' + talkData.content
+					c : talkData.ip + ': '
 				}), P({
 					style : {
 						flt : 'right',
@@ -102,6 +125,91 @@ HanulWiki.Talk = CLASS({
 					c : cal.getYear() + '-' + cal.getMonth(true) + '-' + cal.getDate(true) + ' ' + cal.getHour(true) + ':' + cal.getMinute(true)
 				}), CLEAR_BOTH()]
 			}));
+			
+			change = function(content) {
+				
+				var
+				// cleaned content
+				cleanedContent = '',
+				
+				// content index set
+				contentIndexSet = [],
+				
+				// append count
+				appendCount = 0,
+				
+				// extras
+				i, contentIndex;
+
+				EACH(content, function(ch, i) {
+					if (ch !== ' ') {
+						contentIndexSet[cleanedContent.length] = i;
+						cleanedContent += ch.toLowerCase();
+					}
+				});
+				
+				for (i = 0; i <= contentIndexSet.length; i += 1) {
+					contentIndex = contentIndexSet[i];
+	
+					EACH(talkData.keywords, function(keyword) {
+						
+						if (cleanedContent.substring(i, i + keyword.length) === keyword) {
+							
+							contentDom.append(content.substring(0, contentIndex + appendCount));
+							
+							contentDom.append(A({
+								style : {
+									color : CONFIG.HanulWiki.baseColor
+								},
+								c : content.substring(contentIndex + appendCount, contentIndexSet[i + keyword.length - 1] + appendCount + 1),
+								on : {
+									tap : function() {
+										HanulWiki.GO(HanulWiki.escapeId(keyword));
+									}
+								}
+							}));
+							
+							content = content.substring(contentIndexSet[i + keyword.length - 1] + appendCount + 1);
+	
+							appendCount += 15 + 42 + HanulWiki.escapeId(keyword).length * 2;
+							i += keyword.length - 1;
+							
+							return false;
+						}
+					});
+				}
+				
+				return content;
+			};
+			
+			while (true) {
+				
+				regexResult = content.match(/(https?:\/\/[^\s<]+[^<.,:;"')\]\s])/);
+				
+				if (regexResult === TO_DELETE) {
+					break;
+				}
+				
+				else {
+					
+					foundURL = regexResult[0];
+					
+					contentDom.append(change(content.substring(0, content.indexOf(foundURL))));
+					
+					contentDom.append(A({
+						style : {
+							color : CONFIG.HanulWiki.baseColor
+						},
+						href : foundURL,
+						target : '_blank',
+						c : foundURL
+					}));
+					
+					content = content.substring(content.indexOf(foundURL) + foundURL.length);
+				}
+			}
+			
+			contentDom.append(change(content));
 			
 			list.getContentDom().getEl().scrollTop += 999999;
 		});

@@ -51,5 +51,11 @@ BOOT({
 });
 ```
 
+## 로그인 경로
+* `/func/login`
+
+## 관리용 경로
+* `/func/ban` 특정 IP를 밴하고자 할때 접속합니다.
+
 ## 라이센스 지정
 https://creativecommons.org/licenses/

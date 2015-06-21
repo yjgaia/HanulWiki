@@ -10,11 +10,14 @@ OVERRIDE(HanulWiki.ArticleModel, function(origin) {
 		init : function(inner, self, params) {
 			
 			var
-			// id store
-			idStore = SHARED_STORE('idStore'),
+			// id db
+			idDB = SHARED_DB('idDB'),
 			
 			// history db
-			historyDB = HanulWiki.DB('Article__HISTORY');
+			historyDB = HanulWiki.DB('Article__HISTORY'),
+			
+			// ban store
+			banStore = HanulWiki.SHARED_STORE('banStore');
 
 			inner.on('create', {
 			
@@ -22,48 +25,63 @@ OVERRIDE(HanulWiki.ArticleModel, function(origin) {
 					
 					var
 					// cleaned content
-					cleanedContent = data.content.trim().replace(/ /g, '').toLowerCase(),
+					cleanedContent,
 					
 					// ids
-					ids = idStore.get('ids');
+					ids;
 					
-					data.keywords = [];
-					data.ip = clientInfo.ip;
-					
-					EACH(ids, function(id, i) {
+					if (banStore.get(clientInfo.ip) === true) {
 						
-						var
-						// removed content
-						removedContent = cleanedContent.replace(new RegExp(id, 'g'), '');
-						
-						if (removedContent.length < cleanedContent.length) {
-							data.keywords.push(id);
-						}
-						
-						cleanedContent = removedContent;
-					});
-
-					GET({
-						host : 'tagengine.hanul.co',
-						uri : '__TAG_INPUT',
-						paramStr : 'tag=' + encodeURIComponent(data.id)
-					}, function(tag) {
-						
-						data.id = tag;
-						
-						self.get(data.id, {
-							notExists : next,
-							success : function() {
-								ret({
-									validErrors : {
-										id : {
-											type : 'exists'
-										}
-									}
-								});
+						ret({
+							validErrors : {
+								ban : true
 							}
 						});
-					});
+						
+					} else {
+						
+						cleanedContent = data.content.trim().replace(/ /g, '').toLowerCase();
+						
+						ids = idDB.get('ids').ids;
+						
+						data.keywords = [];
+						data.ip = clientInfo.ip;
+						
+						EACH(ids, function(id, i) {
+							
+							var
+							// removed content
+							removedContent = cleanedContent.replace(new RegExp(id.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g'), '');
+							
+							if (removedContent.length < cleanedContent.length) {
+								data.keywords.push(id);
+							}
+							
+							cleanedContent = removedContent;
+						});
+	
+						GET({
+							host : 'tagengine.hanul.co',
+							uri : '__TAG_INPUT',
+							paramStr : 'tag=' + encodeURIComponent(data.id)
+						}, function(tag) {
+							
+							data.id = tag;
+							
+							self.get(data.id, {
+								notExists : next,
+								success : function() {
+									ret({
+										validErrors : {
+											id : {
+												type : 'exists'
+											}
+										}
+									});
+								}
+							});
+						});
+					}
 					
 					return false;
 				},
@@ -72,7 +90,7 @@ OVERRIDE(HanulWiki.ArticleModel, function(origin) {
 					
 					var
 					// ids
-					ids = idStore.get('ids'),
+					ids = idDB.get('ids').ids,
 					
 					// index
 					index = 0;
@@ -86,11 +104,16 @@ OVERRIDE(HanulWiki.ArticleModel, function(origin) {
 						index = i + 1;
 					});
 					
-					ids.splice(index, 0, savedData.id);
-					
-					idStore.save({
-						name : 'ids',
-						value : ids
+					idDB.update({
+						id : 'ids',
+						data : {
+							$push : {
+								ids : {
+									$each : [savedData.id],
+									$position : index
+								}
+							}
+						}
 					});
 					
 					EACH(savedData.keywords, function(keyword) {
@@ -115,31 +138,45 @@ OVERRIDE(HanulWiki.ArticleModel, function(origin) {
 					// ids
 					ids;
 					
-					if (data.content !== undefined) {
+					// client 일 경우만
+					if (clientInfo !== undefined) {
 						
-						cleanedContent = data.content.trim().replace(/ /g, '').toLowerCase();
-						ids = idStore.get('ids');
-					
-						data.keywords = [];
-						data.ip = clientInfo.ip;
-						
-						EACH(ids, function(id, i) {
+						if (banStore.get(clientInfo.ip) === true) {
 							
-							var
-							// removed content
-							removedContent;
-							
-							if (id !== data.id) {
-							
-								removedContent = cleanedContent.replace(new RegExp(id, 'g'), '');
-								
-								if (removedContent.length < cleanedContent.length) {
-									data.keywords.push(id);
+							ret({
+								validErrors : {
+									ban : true
 								}
+							});
+							
+							return false;
+							
+						} else if (data.content !== undefined) {
+							
+							cleanedContent = data.content.trim().replace(/ /g, '').toLowerCase();
+							ids = idDB.get('ids').ids;
+						
+							data.keywords = [];
+							data.ip = clientInfo.ip;
+							
+							EACH(ids, function(id, i) {
 								
-								cleanedContent = removedContent;
-							}
-						});
+								var
+								// removed content
+								removedContent;
+								
+								if (id !== data.id) {
+								
+									removedContent = cleanedContent.replace(new RegExp(id.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g'), '');
+									
+									if (removedContent.length < cleanedContent.length) {
+										data.keywords.push(id);
+									}
+									
+									cleanedContent = removedContent;
+								}
+							});
+						}
 					}
 				},
 				
@@ -155,26 +192,43 @@ OVERRIDE(HanulWiki.ArticleModel, function(origin) {
 								}
 							});
 						});
+						
+						HanulWiki.BROADCAST({
+							roomName : 'Article',
+							methodName : 'recentUpdate',
+							data : savedData
+						});
 					}
 				}
 			});
 			
 			inner.on('remove', {
 				
+				before : function(id, next, ret, clientInfo) {
+					
+					if (banStore.get(clientInfo.ip) === true) {
+						
+						ret({
+							isNotAuthed : true
+						});
+						
+						return false;
+					}
+				},
+				
 				after : function(originData) {
 					
 					var
 					// ids
-					ids = idStore.get('ids');
+					ids = idDB.get('ids').ids;
 					
-					REMOVE({
-						array : ids,
-						value : originData.id
-					});
-					
-					idStore.save({
-						name : 'ids',
-						value : ids
+					idDB.update({
+						id : 'ids',
+						data : {
+							$pull : {
+								ids : originData.id
+							}
+						}
 					});
 					
 					EACH(originData.keywords, function(keyword) {
@@ -206,14 +260,16 @@ OVERRIDE(HanulWiki.ArticleModel, function(origin) {
 					}
 				});
 				
-				on('findHistory', function(id, ret) {
+				on('findHistory', function(params, ret) {
 					
-					if (id !== undefined) {
+					if (params !== undefined) {
 					
 						historyDB.find({
 							filter : {
-								docId : id
+								docId : params.id
 							},
+							start : params.page === undefined ? 0 : (params.page - 1) * 10,
+							count : 10,
 							sort : {
 								time : -1
 							}

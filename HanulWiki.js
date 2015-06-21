@@ -21,7 +21,8 @@ BOOT({
 		dbName : 'HanulWiki-test',
 		isUsingHTMLSnapshot : true,
 		HanulWiki : {
-			password : '1234'
+			password : '1234',
+			adminPassword : '1234'
 		}
 	}
 });

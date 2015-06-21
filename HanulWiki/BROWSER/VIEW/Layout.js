@@ -46,6 +46,12 @@ HanulWiki.Layout = CLASS(function(cls) {
 			// auth room
 			authRoom = HanulWiki.ROOM('authRoom'),
 			
+			// connection room
+			connectionRoom = HanulWiki.ROOM('connectionRoom'),
+			
+			// on new article room
+			onNewArticleRoom,
+			
 			// tap event
 			tapEvent = EVENT('tap', function() {
 				if (searchResult !== undefined) {
@@ -62,6 +68,9 @@ HanulWiki.Layout = CLASS(function(cls) {
 			
 			// count dom
 			countDom,
+			
+			// connection count dom
+			connectionCountDom,
 			
 			// footer
 			footer,
@@ -398,6 +407,7 @@ HanulWiki.Layout = CLASS(function(cls) {
 												on : {
 													remove : function() {
 														keydownEvent.remove();
+														keydownEvent = undefined;
 													}
 												}
 											}).appendTo(BODY);
@@ -408,7 +418,7 @@ HanulWiki.Layout = CLASS(function(cls) {
 												// button
 												button;
 												
-												if (searchResult !== undefined) {
+												if (keydownEvent !== undefined) {
 												
 													searchResult.append(button = UUI.BUTTON_H({
 														style : {
@@ -541,6 +551,104 @@ HanulWiki.Layout = CLASS(function(cls) {
 						if (inner.checkIsClosed() !== true) {
 							countDom.empty();
 							countDom.append('전체 항목 수: ' + count);
+							
+							onNewArticleRoom = HanulWiki.ArticleModel.onNew(function(newArticleData) {
+								
+								var
+								// panel
+								panel,
+								
+								// article link
+								articleLink;
+								
+								count += 1;
+								
+								countDom.empty();
+								countDom.append('전체 항목 수: ' + count);
+								
+								panel = UUI.PANEL({
+									style : {
+										position : 'fixed',
+										right : 10,
+										bottom : 10,
+										border : '1px solid #000',
+										backgroundColor : '#eee',
+										color : '#000',
+										boxShadow : '1px 1px 1px #000'
+									},
+									contentStyle : {
+										padding : '5px 10px'
+									},
+									c : ['새 항목: ', articleLink = A({
+										style : {
+											color : CONFIG.HanulWiki.baseColor
+										},
+										c : newArticleData.id,
+										on : {
+											tap : function() {
+												HanulWiki.GO(HanulWiki.escapeId(newArticleData.id));
+											}
+										}
+									})]
+								}).appendTo(BODY);
+								
+								UANI.SLIDE_UP_SHOW({
+									node : panel
+								});
+								
+								GET({
+									host : 'tagengine.btncafe.com',
+									uri : '__REP_TAG',
+									paramStr : 'tag=' + encodeURIComponent(newArticleData.id)
+								}, function(id) {
+									if (panel !== undefined) {
+										articleLink.empty();
+										articleLink.append(id);
+									}
+								});
+								
+								DELAY(5, function() {
+									
+									UANI.SLIDE_DOWN_HIDE({
+										node : panel
+									}, function() {
+									
+										panel.remove();
+										panel = undefined;
+									});
+								});
+							});
+						}
+					});
+					
+					header.append(connectionCountDom = DIV({
+						style : {
+							flt : 'right',
+							padding : 10
+						},
+						title : '접속중인 유저 수: 로딩중...'
+					}));
+			
+					connectionRoom.send({
+						methodName : 'getConnectionCount'
+					}, function(count) {
+						
+						if (inner.checkIsClosed() !== true) {
+							
+							connectionCountDom.empty();
+							connectionCountDom.append('접속중인 유저 수: ' + count);
+							
+							connectionRoom.on('newUser', function() {
+								count += 1;
+								connectionCountDom.empty();
+								connectionCountDom.append('접속중인 유저 수: ' + count);
+							});
+							
+							connectionRoom.on('leaveUser', function() {
+								count -= 1;
+								connectionCountDom.empty();
+								connectionCountDom.append('접속중인 유저 수: ' + count);
+							});
 						}
 					});
 					
@@ -580,11 +688,17 @@ HanulWiki.Layout = CLASS(function(cls) {
 			});
 			
 			inner.on('close', function() {
+				
 				scrollStore.remove();
 				authRoom.exit();
+				connectionRoom.exit();
 				tapEvent.remove();
 				layout.remove();
 				content = undefined;
+				
+				if (onNewArticleRoom !== undefined) {
+					onNewArticleRoom.exit();
+				}
 			});
 		}
 	};

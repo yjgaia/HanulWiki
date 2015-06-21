@@ -22,7 +22,7 @@ HanulWiki.MAIN = METHOD({
 		});
 		
 		HanulWiki.MATCH_VIEW({
-			uri : '{id}/history',
+			uri : ['{id}/history', '{id}/history/{page}'],
 			target : HanulWiki.History
 		});
 		
@@ -49,6 +49,16 @@ HanulWiki.MAIN = METHOD({
 		HanulWiki.MATCH_VIEW({
 			uri : 'func/talk',
 			target : HanulWiki.Talk
+		});
+		
+		HanulWiki.MATCH_VIEW({
+			uri : 'func/realtime',
+			target : HanulWiki.Realtime
+		});
+		
+		HanulWiki.MATCH_VIEW({
+			uri : 'func/ban',
+			target : HanulWiki.Ban
 		});
 	}
 });
