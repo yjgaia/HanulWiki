@@ -208,10 +208,10 @@ HanulWiki.View = CLASS({
 											if (cleanedContent.substring(i, i + keyword.length) === keyword) {
 			
 												textContent = textContent.substring(0, contentIndex + appendCount)
-												+ '<a href="' + HanulWiki.escapeId(keyword) + '" onclick="HanulWiki.GO(\'' + HanulWiki.escapeId(keyword) + '\'); return false;">' + textContent.substring(contentIndex + appendCount, contentIndexSet[i + keyword.length - 1] + appendCount + 1) + '</a>'
+												+ '<a style="color: ' + CONFIG.HanulWiki.baseColor + ';" href="' + HanulWiki.escapeId(keyword) + '" onclick="HanulWiki.GO(\'' + HanulWiki.escapeId(keyword) + '\'); return false;">' + textContent.substring(contentIndex + appendCount, contentIndexSet[i + keyword.length - 1] + appendCount + 1) + '</a>'
 												+ textContent.substring(contentIndexSet[i + keyword.length - 1] + appendCount + 1);
 												
-												appendCount += 15 + 42 + HanulWiki.escapeId(keyword).length * 2;
+												appendCount += 32 + CONFIG.HanulWiki.baseColor.length + 42 + HanulWiki.escapeId(keyword).length * 2;
 												i += keyword.length - 1;
 												
 												return false;

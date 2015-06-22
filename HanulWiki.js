@@ -12,7 +12,7 @@ BOOT({
 			//isPrivate : true
 			license : 'CC BY-NC-SA',
 			copyright : 'test',
-			mainDocument : '하늘위키',
+			mainDocument : 'wiki/main',
 			baseColor : '#4183c4',
 			logo : 'logo.png'
 		}

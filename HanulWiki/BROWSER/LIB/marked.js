@@ -872,7 +872,7 @@ Renderer.prototype.link = function(href, title, text) {
       return '';
     }
   }
-  var out = '<a href="' + href + '"';
+  var out = '<a style="color: ' + CONFIG.HanulWiki.baseColor + ';" href="' + href + '"';
   
   if (href.indexOf('http://') !== 0 && href.indexOf('https://') !== 0 && href.indexOf('#') !== 0) {
   	out += ' onclick="HanulWiki.GO(\'' + href + '\'); return false;"';
