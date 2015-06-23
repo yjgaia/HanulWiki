@@ -206,7 +206,10 @@ OVERRIDE(HanulWiki.ArticleModel, function(origin) {
 				
 				before : function(id, next, ret, clientInfo) {
 					
-					if (banStore.get(clientInfo.ip) === true) {
+					if (banStore.get(clientInfo.ip) === true || (CONFIG.HanulWiki.isCannotRemove === true && CHECK_IS_IN({
+						array : clientInfo.roles,
+						value : 'ADMIN'
+					}) !== true)) {
 						
 						ret({
 							isNotAuthed : true

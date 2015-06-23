@@ -115,7 +115,6 @@ BOOT({
 ### 라이센스 지정
 CC 라이센스를 지정할 수 있습니다. 라이센스 종류는 다음 경로에서 확인하시기 바랍니다.
 https://creativecommons.org/licenses/
-
 ```javascript
 ...
 BOOT({
@@ -130,8 +129,7 @@ BOOT({
 ```
 
 ### 항목 삭제 금지 설정
-`isCannotRemove` 설정이 `true`면 항목 작성 및 수정만 가능합니다.
-
+`isCannotRemove` 설정이 `true`면 항목 작성 및 수정만 가능합니다. 글 삭제 버튼은 글 수정 폼 하단에 있습니다.
 ```javascript
 ...
 BOOT({
@@ -147,7 +145,6 @@ BOOT({
 
 ### 관리자 비밀번호 지정
 아래와 같이 관리자 비밀번호를 지정하면 관리자로 로그인 한 경우 `isCannotRemove` 설정이 `true` 더라도 삭제할 수 있습니다.
-
 ```javascript
 ...
 BOOT({

@@ -14,7 +14,8 @@ BOOT({
 			copyright : 'test',
 			mainDocument : 'wiki/main',
 			baseColor : '#4183c4',
-			logo : 'logo.png'
+			logo : 'logo.png',
+			isCannotRemove : true
 		}
 	},
 	NODE_CONFIG : {
@@ -22,7 +23,7 @@ BOOT({
 		isUsingHTMLSnapshot : true,
 		HanulWiki : {
 			password : '1234',
-			adminPassword : '1234'
+			adminPassword : '5678'
 		}
 	}
 });

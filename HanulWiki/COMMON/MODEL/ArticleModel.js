@@ -55,7 +55,7 @@ HanulWiki.ArticleModel = OBJECT({
 					valid : VALID(validDataSet),
 					role : 'USER'
 				},
-				remove : CONFIG.HanulWiki.isCannotRemove === true ? false : {
+				remove : {
 					role : 'USER'
 				}
 			}
