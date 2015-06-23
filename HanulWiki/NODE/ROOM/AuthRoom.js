@@ -9,7 +9,10 @@ HanulWiki.AuthRoom = OBJECT({
 				
 				var
 				// is authed
-				isAuthed = (CONFIG.HanulWiki !== undefined && CONFIG.HanulWiki.isPublic === true) || (NODE_CONFIG.HanulWiki !== undefined && password === NODE_CONFIG.HanulWiki.password);
+				isAuthed = (CONFIG.HanulWiki !== undefined && CONFIG.HanulWiki.isPublic === true) ||
+					(NODE_CONFIG.HanulWiki !== undefined && password !== undefined &&
+						(password === NODE_CONFIG.HanulWiki.password || password === NODE_CONFIG.HanulWiki.adminPassword)
+					);
 				
 				if (isAuthed === true) {
 					clientInfo.roles = ['USER'];
