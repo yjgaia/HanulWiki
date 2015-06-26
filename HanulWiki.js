@@ -20,7 +20,6 @@ BOOT({
 	},
 	NODE_CONFIG : {
 		dbName : 'HanulWiki-test',
-		isUsingHTMLSnapshot : true,
 		HanulWiki : {
 			password : '1234',
 			adminPassword : '5678'
