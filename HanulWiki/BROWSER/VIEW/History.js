@@ -66,7 +66,7 @@ HanulWiki.History = CLASS({
 				})
 			}));
 			
-			TITLE(CONFIG.title + ' :: ' + id + '의 수정 내역');
+			TITLE(id + '의 수정 내역 - ' + CONFIG.title);
 			
 			GET({
 				host : 'tagengine.btncafe.com',
@@ -77,7 +77,7 @@ HanulWiki.History = CLASS({
 				idDom.empty();
 				idDom.append(id);
 				
-				TITLE(CONFIG.title + ' :: ' + id + '의 수정 내역');
+				TITLE(id + '의 수정 내역 - ' + CONFIG.title);
 			});
 			
 			HanulWiki.ArticleModel.get(id, function(nowArticleData) {

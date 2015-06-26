@@ -12,7 +12,7 @@ HanulWiki.MAIN = METHOD({
 			idDB = SHARED_DB('idDB');
 			
 			// 하루에 한번씩 실행
-			INTEGER(24 * 60 * 60, RAR(function() {
+			INTERVAL(1, RAR(function() {
 			
 				HanulWiki.ArticleModel.find({
 					isFindAll : true

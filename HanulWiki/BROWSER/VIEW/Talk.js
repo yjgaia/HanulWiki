@@ -214,7 +214,7 @@ HanulWiki.Talk = CLASS({
 			list.getContentDom().getEl().scrollTop += 999999;
 		});
 		
-		TITLE(CONFIG.title + ' :: 토론');
+		TITLE('토론 - ' + CONFIG.title);
 		
 		inner.on('close', function() {
 			onNewAndFindRoom.exit();

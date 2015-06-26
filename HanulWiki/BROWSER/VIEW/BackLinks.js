@@ -71,7 +71,7 @@ HanulWiki.BackLinks = CLASS({
 						})
 					}));
 					
-					TITLE(CONFIG.title + ' :: ' + keyword + '의 역링크');
+					TITLE(keyword + '의 역링크 - ' + CONFIG.title);
 					
 					GET({
 						host : 'tagengine.btncafe.com',
@@ -82,7 +82,7 @@ HanulWiki.BackLinks = CLASS({
 						articleLink.empty();
 						articleLink.append(id);
 						
-						TITLE(CONFIG.title + ' :: ' + id + '의 역링크');
+						TITLE(id + '의 역링크 - ' + CONFIG.title);
 					});
 				});
 			});

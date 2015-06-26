@@ -76,7 +76,7 @@ HanulWiki.MarkdownSample = CLASS({
 			editor.setValue(md);
 		});
 		
-		TITLE(CONFIG.title + ' :: 문법 소개');
+		TITLE('문법 소개 - ' + CONFIG.title);
 
 		inner.on('close', function() {
 			wrapper.remove();

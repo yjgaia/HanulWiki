@@ -56,16 +56,16 @@ HanulWiki.Form = CLASS({
 			function(next) {
 				
 				if (id === undefined) {
-					TITLE(CONFIG.title + ' :: 글작성');
+					TITLE('글작성 - ' + CONFIG.title);
 					next();
 				} else {
 					
 					id = HanulWiki.descapeId(id);
-					TITLE(CONFIG.title + ' :: 글수정');
+					TITLE('글수정 - ' + CONFIG.title);
 					
 					HanulWiki.ArticleModel.get(id, {
 						notExists : function() {
-							TITLE(CONFIG.title + ' :: 글작성');
+							TITLE('글작성 - ' + CONFIG.title);
 							next();
 						},
 						success : next

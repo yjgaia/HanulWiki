@@ -235,7 +235,7 @@ HanulWiki.View = CLASS({
 						
 						change(content.getEl());
 						
-						TITLE(CONFIG.title + ' :: ' + articleData.id);
+						TITLE(articleData.id + ' - ' + CONFIG.title);
 						
 						GET({
 							host : 'tagengine.btncafe.com',
@@ -246,7 +246,7 @@ HanulWiki.View = CLASS({
 							idDom.empty();
 							idDom.append(id);
 							
-							TITLE(CONFIG.title + ' :: ' + id);
+							TITLE(id + ' - ' + CONFIG.title);
 						});
 					}
 				}

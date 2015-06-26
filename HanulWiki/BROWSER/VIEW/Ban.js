@@ -78,7 +78,7 @@ HanulWiki.Ban = CLASS({
 			methodName : 'getBanList'
 		}, EACH(createBan));
 		
-		TITLE(CONFIG.title + ' :: 제한 IP');
+		TITLE('제한 IP - ' + CONFIG.title);
 		
 		inner.on('close', function() {
 			banRoom.exit();

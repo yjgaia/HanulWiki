@@ -78,7 +78,7 @@ HanulWiki.Login = CLASS({
 			})
 		}).appendTo(HanulWiki.Layout.getContent());
 		
-		TITLE(CONFIG.title + ' :: 로그인');
+		TITLE('로그인 - ' + CONFIG.title);
 
 		inner.on('close', function() {
 			authRoom.exit();
