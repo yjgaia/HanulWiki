@@ -40,10 +40,20 @@ HanulWiki.MarkdownSample = CLASS({
 					},
 					on : {
 						keyup : function(e, textarea) {
-							content.getEl().innerHTML = marked(textarea.getValue());
+							HanulWiki.markUp({
+								dom : content,
+								articleData : {
+									content : textarea.getValue()
+								}
+							});
 						},
 						change : function(e, textarea) {
-							content.getEl().innerHTML = marked(textarea.getValue());
+							HanulWiki.markUp({
+								dom : content,
+								articleData : {
+									content : textarea.getValue()
+								}
+							});
 						}
 					}
 				})

@@ -159,81 +159,10 @@ HanulWiki.View = CLASS({
 						content.append(articleData.content);
 					} else {
 						
-						content.getEl().setAttribute('class', 'markdown-body');
-						content.getEl().innerHTML = marked(articleData.content);
-						
-						change = function(el) {
-							
-							var
-							// text content
-							textContent,
-							
-							// cleaned content
-							cleanedContent = '',
-							
-							// content index set
-							contentIndexSet = [],
-							
-							// append count
-							appendCount = 0,
-							
-							// new el
-							newEl,
-							
-							// extras
-							i, contentIndex;
-							
-							if (el.tagName !== 'A') {
-								
-								if (el.tagName === undefined) {
-									
-									textContent = el.textContent;
-									
-									EACH(el.textContent, function(ch, i) {
-										if (ch !== ' ') {
-											contentIndexSet[cleanedContent.length] = i;
-											cleanedContent += ch.toLowerCase();
-										}
-									});
-									
-									for (i = 0; i <= contentIndexSet.length; i += 1) {
-										contentIndex = contentIndexSet[i];
-				
-										EACH(articleData.keywords, function(keyword) {
-											
-											var
-											// href
-											href;
-											
-											if (cleanedContent.substring(i, i + keyword.length) === keyword) {
-			
-												textContent = textContent.substring(0, contentIndex + appendCount)
-												+ '<a style="color: ' + CONFIG.HanulWiki.baseColor + ';" href="' + HanulWiki.escapeId(keyword) + '" onclick="HanulWiki.GO(\'' + HanulWiki.escapeId(keyword) + '\'); return false;">' + textContent.substring(contentIndex + appendCount, contentIndexSet[i + keyword.length - 1] + appendCount + 1) + '</a>'
-												+ textContent.substring(contentIndexSet[i + keyword.length - 1] + appendCount + 1);
-												
-												appendCount += 32 + CONFIG.HanulWiki.baseColor.length + 42 + HanulWiki.escapeId(keyword).length * 2;
-												i += keyword.length - 1;
-												
-												return false;
-											}
-										});
-									}
-									
-									newEl = document.createElement('span');
-									newEl.innerHTML = textContent;
-									
-									el.parentNode.insertBefore(newEl, el);
-									el.parentNode.removeChild(el);
-								
-								} else {
-									for (i = 0; i < el.childNodes.length; i += 1) {
-										change(el.childNodes[i]);
-									}
-								}
-							}
-						};
-						
-						change(content.getEl());
+						HanulWiki.markUp({
+							dom : content,
+							articleData : articleData
+						});
 						
 						TITLE(articleData.id + ' - ' + CONFIG.title);
 						

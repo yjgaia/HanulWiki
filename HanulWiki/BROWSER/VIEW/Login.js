@@ -64,12 +64,12 @@ HanulWiki.Login = CLASS({
 								HanulWiki.REFRESH('');
 								
 							} else {
-								UUI.MODAL({
+								UUI.NOTICE({
 									style : {
 										padding : '20px 30px',
-										backgroundColor : '#ddd'
+										backgroundColor : CONFIG.HanulWiki.baseColor
 									},
-									c : '비밀번호가 다릅니다.'
+									msg : '비밀번호가 다릅니다.'
 								});
 							}
 						});

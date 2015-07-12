@@ -20,7 +20,7 @@ HanulWiki.History = CLASS({
 			id = HanulWiki.descapeId(params.id.trim().replace(/ /g, '').toLowerCase()),
 			
 			// page
-			page = params.page,
+			page = INTEGER(params.page),
 			
 			// id dom
 			idDom,
