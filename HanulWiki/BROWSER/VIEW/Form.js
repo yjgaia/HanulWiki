@@ -134,8 +134,12 @@ HanulWiki.Form = CLASS({
 									marginTop : 10
 								},
 								box : HanulWiki,
-								accept : 'image/*',
-								uploadSuccess : function(fileData, form) {
+								accept : 'image/*'
+							}, {
+								overSizeFile : function(maxUploadFileMB) {
+									alert('파일 용량은 ' + maxUploadFileMB + 'mb를 넘을 수 없습니다.');
+								},
+								success : function(fileData, form) {
 									
 									var
 									// input

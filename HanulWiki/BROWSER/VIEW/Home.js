@@ -21,7 +21,7 @@ HanulWiki.Home = CLASS({
 			
 			if (isManuallyScroll === true) {
 				isManuallyScroll = false;
-			} else {
+			} else if (SCROLL_TOP() > 0) {
 			
 				scrollStore.save({
 					name : 'top',
@@ -153,14 +153,14 @@ HanulWiki.Home = CLASS({
 					
 			popularList.empty();
 			
-			EACH(articleDataSet, function(articleData) {
-				
-				var
-				// article link
-				articleLink;
-				
-				if (inner.checkIsClosed() !== true) {
+			if (inner.checkIsClosed() !== true) {
+			
+				EACH(articleDataSet, function(articleData) {
 					
+					var
+					// article link
+					articleLink;
+						
 					popularList.append(DIV({
 						style : {
 							padding : 5
@@ -193,10 +193,10 @@ HanulWiki.Home = CLASS({
 						articleLink.empty();
 						articleLink.append(id);
 					});
-					
-					scrollToSavedTop();
-				}
-			});
+				});
+			
+				scrollToSavedTop();
+			}
 		});
 		
 		HanulWiki.ArticleModel.onNewAndFind({
@@ -313,15 +313,14 @@ HanulWiki.Home = CLASS({
 					
 			recentUpdateList.empty();
 			
-			EACH(articleDataSet, function(articleData) {
-				
-				if (inner.checkIsClosed() !== true) {
-					
+			if (inner.checkIsClosed() !== true) {
+			
+				EACH(articleDataSet, function(articleData) {
 					recentUpdateList.append(createArticleDom(articleData));
-					
-					scrollToSavedTop();
-				}
-			});
+				});
+				
+				scrollToSavedTop();
+			}
 			
 			if (articleRoom !== undefined) {
 			
@@ -347,23 +346,26 @@ HanulWiki.Home = CLASS({
 				// change.
 				change;
 				
-				wrapper.prepend(content = DIV({
-					style : {
-						border : '1px solid #ccc',
-						padding : 10,
-						fontSize : 14,
-						margin : '10px 0 20px 0'
-					}
-				}));
+				if (inner.checkIsClosed() !== true) {
 				
-				if (browserInfo.name === 'Internet Explorer' && browserInfo.version < 9) {
-					content.append(articleData.content);
-				} else {
+					wrapper.prepend(content = DIV({
+						style : {
+							border : '1px solid #ccc',
+							padding : 10,
+							fontSize : 14,
+							margin : '10px 0 20px 0'
+						}
+					}));
 					
-					HanulWiki.markUp({
-						dom : content,
-						articleData : articleData
-					});
+					if (browserInfo.name === 'Internet Explorer' && browserInfo.version < 9) {
+						content.append(articleData.content);
+					} else {
+						
+						HanulWiki.markUp({
+							dom : content,
+							articleData : articleData
+						});
+					}
 					
 					scrollToSavedTop();
 				}
