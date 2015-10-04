@@ -341,10 +341,7 @@ HanulWiki.Home = CLASS({
 				
 				var
 				// content
-				content,
-				
-				// change.
-				change;
+				content;
 				
 				if (inner.checkIsClosed() !== true) {
 				

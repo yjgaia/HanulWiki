@@ -32,10 +32,7 @@ HanulWiki.View = CLASS({
 				content,
 				
 				// id dom
-				idDom,
-				
-				// change.
-				change;
+				idDom;
 				
 				if (articleData === undefined) {
 					HanulWiki.GO('func/new/' + params.id);
