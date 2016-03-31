@@ -60,5 +60,10 @@ HanulWiki.MAIN = METHOD({
 			uri : 'func/ban',
 			target : HanulWiki.Ban
 		});
+		
+		HanulWiki.MATCH_VIEW({
+			uri : 'func/blocktag',
+			target : HanulWiki.BlockTag
+		});
 	}
 });

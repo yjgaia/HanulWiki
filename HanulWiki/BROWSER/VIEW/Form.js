@@ -94,6 +94,9 @@ HanulWiki.Form = CLASS({
 									},
 									exists : function() {
 										return '이미 존재하는 문서입니다.';
+									},
+									blocked : function() {
+										return '작성이 제한된 항목입니다.';
 									}
 								},
 								content : {
@@ -187,6 +190,8 @@ HanulWiki.Form = CLASS({
 											
 											if (validErrors.ban === true) {
 												alert('차단된 IP 입니다. 모바일일 경우, 해당 통신사를 쓰는 다른 누구가로 인해 차단된 것일 수 있습니다.');
+											} else if (articleData !== undefined && validErrors.id.type === 'blocked') {
+												alert('수정이 제한된 항목입니다.');
 											}
 											
 											form.showErrors(validErrors);

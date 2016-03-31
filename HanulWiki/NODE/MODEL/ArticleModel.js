@@ -66,15 +66,30 @@ OVERRIDE(HanulWiki.ArticleModel, function(origin) {
 							paramStr : 'tag=' + encodeURIComponent(data.id)
 						}, function(tag) {
 							
-							data.id = tag;
-							
-							self.get(data.id, {
-								notExists : next,
+							HanulWiki.BlockTagModel.get(tag, {
+								notExists : function() {
+									
+									data.id = tag;
+									
+									self.get(data.id, {
+										notExists : next,
+										success : function() {
+											ret({
+												validErrors : {
+													id : {
+														type : 'exists'
+													}
+												}
+											});
+										}
+									});
+								},
+								
 								success : function() {
 									ret({
 										validErrors : {
 											id : {
-												type : 'exists'
+												type : 'blocked'
 											}
 										}
 									});
@@ -153,27 +168,42 @@ OVERRIDE(HanulWiki.ArticleModel, function(origin) {
 							
 						} else if (data.content !== undefined) {
 							
-							cleanedContent = data.content.trim().replace(/ /g, '').toLowerCase();
-							ids = idDB.get('ids').ids;
-						
-							data.keywords = [];
-							data.ip = clientInfo.ip;
-							
-							EACH(ids, function(id, i) {
-								
-								var
-								// removed content
-								removedContent;
-								
-								if (id !== data.id) {
-								
-									removedContent = cleanedContent.replace(new RegExp(id.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g'), '');
+							HanulWiki.BlockTagModel.get(data.id, {
+								notExists : function() {
 									
-									if (removedContent.length < cleanedContent.length) {
-										data.keywords.push(id);
-									}
+									cleanedContent = data.content.trim().replace(/ /g, '').toLowerCase();
+									ids = idDB.get('ids').ids;
+								
+									data.keywords = [];
+									data.ip = clientInfo.ip;
 									
-									cleanedContent = removedContent;
+									EACH(ids, function(id, i) {
+										
+										var
+										// removed content
+										removedContent;
+										
+										if (id !== data.id) {
+										
+											removedContent = cleanedContent.replace(new RegExp(id.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g'), '');
+											
+											if (removedContent.length < cleanedContent.length) {
+												data.keywords.push(id);
+											}
+											
+											cleanedContent = removedContent;
+										}
+									});
+								},
+								
+								success : function() {
+									ret({
+										validErrors : {
+											id : {
+												type : 'blocked'
+											}
+										}
+									});
 								}
 							});
 						}
@@ -251,7 +281,7 @@ OVERRIDE(HanulWiki.ArticleModel, function(origin) {
 					
 					if (id !== undefined) {
 					
-						self.updateNoHistory({
+						self.updateNoRecord({
 							id : id,
 							$inc : {
 								viewCount : 1
