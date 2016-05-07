@@ -319,7 +319,7 @@ OVERRIDE(HanulWiki.ArticleModel, function(origin) {
 					function() {
 						return function() {
 							
-							self.update({
+							self.getDB().update({
 								id : id,
 								content : '글 삭제'
 							}, next);
