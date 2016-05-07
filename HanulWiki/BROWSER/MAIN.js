@@ -65,5 +65,10 @@ HanulWiki.MAIN = METHOD({
 			uri : 'func/blocktag',
 			target : HanulWiki.BlockTag
 		});
+		
+		HanulWiki.MATCH_VIEW({
+			uri : 'func/admin',
+			target : HanulWiki.Admin
+		});
 	}
 });

@@ -90,7 +90,7 @@ HanulWiki.Form = CLASS({
 								id : {
 									notEmpty : '이름을 입력해주세요.',
 									size : function(validParams) {
-										return '이름은 ' + validParams.max + '글자 미만으로 입력해주세요.';
+										return '이름은 ' + validParams.min + '글자 이상, ' + validParams.max + '글자 미만으로 입력해주세요.';
 									},
 									exists : function() {
 										return '이미 존재하는 문서입니다.';

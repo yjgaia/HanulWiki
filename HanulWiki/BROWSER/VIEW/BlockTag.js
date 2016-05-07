@@ -12,7 +12,9 @@ HanulWiki.BlockTag = CLASS({
 		var
 		// wrapper
 		wrapper = DIV({
-			c : FORM({
+			c : [H1({
+				c : '제한 항목을 추가합니다.'
+			}), FORM({
 				c : [INPUT({
 					name : 'id'
 				}), INPUT({
@@ -33,7 +35,7 @@ HanulWiki.BlockTag = CLASS({
 						});
 					}
 				}
-			})
+			})]
 		}).appendTo(HanulWiki.Layout.getContent()),
 		
 		// create blog tag.

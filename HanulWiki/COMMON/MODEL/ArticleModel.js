@@ -15,6 +15,7 @@ HanulWiki.ArticleModel = OBJECT({
 			id : {
 				notEmpty : true,
 				size : {
+					min : CONFIG.HanulWiki.minTagLength === undefined ? 1 : CONFIG.HanulWiki.minTagLength,
 					max : 255
 				}
 			},

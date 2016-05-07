@@ -15,7 +15,9 @@ HanulWiki.Ban = CLASS({
 		
 		// wrapper
 		wrapper = DIV({
-			c : FORM({
+			c : [H1({
+				c : '차단할 IP를 추가합니다.'
+			}), FORM({
 				c : [INPUT({
 					name : 'ip'
 				}), INPUT({
@@ -37,7 +39,7 @@ HanulWiki.Ban = CLASS({
 						});
 					}
 				}
-			})
+			})]
 		}).appendTo(HanulWiki.Layout.getContent()),
 		
 		// create ban.

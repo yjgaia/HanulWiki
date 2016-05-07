@@ -1,4 +1,4 @@
-HanulWiki.ConnectionRoom = OBJECT({
+HanulWiki.BanRoom = OBJECT({
 	
 	init : function() {
 		'use strict';
@@ -6,6 +6,15 @@ HanulWiki.ConnectionRoom = OBJECT({
 		var
 		// ban store
 		banStore = HanulWiki.SHARED_STORE('banStore');
+		
+		HanulWiki.BanModel.find({
+			isFindAll : true
+		}, EACH(function(banData) {
+			banStore.save({
+				name : banData.id,
+				value : true
+			});
+		}));
 		
 		HanulWiki.ROOM('banRoom', function(clientInfo, on, off) {
 			
@@ -18,11 +27,13 @@ HanulWiki.ConnectionRoom = OBJECT({
 						value : 'ADMIN'
 					}) === true) {
 						
-						// 1주일 동안 ban
 						banStore.save({
 							name : ipToBan,
-							value : true,
-							removeAfterSeconds : 7 * 24 * 60 * 60
+							value : true
+						});
+						
+						HanulWiki.BanModel.create({
+							id : ipToBan
 						});
 						
 						ret();

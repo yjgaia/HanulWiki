@@ -4,6 +4,6 @@ HanulWiki.descapeId = METHOD({
 		'use strict';
 		//REQUIRED: id
 		
-		return id.replace(/@!/g, '/').replace(/@~/g, '?');
+		return id.replace(/@!/g, '/').replace(/@~/g, '?').replace(/@@/g, '#');
 	}
 });
