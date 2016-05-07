@@ -19,7 +19,7 @@ BOOT({
 			logo : 'logo.png',
 			isCannotRemove : true,
 			
-			minTagLength : 2
+			//minTagLength : 2
 		}
 	},
 	NODE_CONFIG : {
